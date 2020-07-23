@@ -136,6 +136,10 @@ public class Player {
             done = true;
         }
 
+        // Remove selected card from hand
+        hand.remove(selectedCard);
+        connection.updateHand(hand.toArray(new Card[hand.size()]));
+
         return selectedCard;
     }
 
