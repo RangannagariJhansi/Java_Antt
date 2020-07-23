@@ -65,8 +65,7 @@ public class Round {
     }
 
     private Player nextPlayer() {
-        currentPlayer += 1;
-        currentPlayer %= players.size();
+        currentPlayer = ++currentPlayer % players.size();
         return currentPlayer();
     }
 
