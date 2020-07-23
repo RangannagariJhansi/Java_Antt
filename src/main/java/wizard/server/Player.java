@@ -69,12 +69,6 @@ public class Player {
 
     public boolean hasColor(final Color color) {
         return hand.parallelStream().anyMatch(x -> x.getColor() == color);
-        /*for (Card c : hand) {
-            if (c.getColor().equals(color)) {
-                return true;
-            }
-        }
-        return false;*/
     }
 
     public int askPrediction(int upperBorder) {
