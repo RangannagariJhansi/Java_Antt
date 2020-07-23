@@ -1,0 +1,68 @@
+<?xml version = "1.0"?>
+<project name = "Wizard" default = "dist">
+  <property name = "src.dir"           location = "src/main/java"/>
+  <property name = "test.dir"          location = "src/test/java"/>
+  <property name = "build.dir"         location = "build"/>
+  <property name = "build.dist.dir"    location = "${build.dir}"/>
+  <property name = "build.classes.dir" location = "${build.dir}/classes"/>
+  <property name = "doc.dir"           location = "doc"/>
+
+  <property name = "build.debug"       value = "true"/>
+
+  <fileset id = "src.common" dir = "${src.dir}">
+    <include name = "wizard/common/**/*.java"/>
+  </fileset>
+
+  <fileset id = "src.client" dir = "${src.dir}">
+    <include name = "wizard/client/**/*.java"/>
+  </fileset>
+
+  <fileset id = "src.server" dir = "${src.dir}">
+    <include name = "wizard/server/**/*.java"/>
+  </fileset>
+
+
+  <target name = "compile">
+    <mkdir dir = "${build.classes.dir}"/>
+    <javac includeantruntime = "false" srcdir = "${src.dir}" destdir = "${build.classes.dir}" debug = "${build.debug}"/>
+  </target>
+
+
+  <target name = "dist" depends = "compile">
+
+    <jar destfile = "${build.dir}/server.jar">
+      <fileset refid = "src.common"/>
+      <fileset refid = "src.server"/>
+      <manifest>
+        <attribute name = "Main-Class" value = "wizard.server.Main"/>
+      </manifest>
+    </jar>
+
+    <jar destfile = "${build.dir}/client.jar">
+      <fileset refid = "src.common"/>
+      <fileset refid = "src.client"/>
+      <manifest>
+        <attribute name = "Main-Class" value = "wizard.client.Main"/>
+      </manifest>
+    </jar>
+
+  </target>
+
+
+  <target name = "doc">
+    <mkdir dir = "${doc.dir}"/>
+
+    <javadoc destdir = "${doc.dir}" packagenames = "*" private = "true" windowtitle = "Wizard Documentation">
+      <packageset dir = "${src.dir}" />
+    </javadoc>
+  </target>
+
+
+  <target name = "clean">
+    <delete dir="${doc.dir}"/>
+    <delete dir="${build.classes.dir}"/>
+    <delete dir="${build.dist.dir}"/>
+    <delete dir="${build.dir}"/>
+  </target>
+</project>
+
