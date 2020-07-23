@@ -1,0 +1,39 @@
+# Generic editor
+*~
+*.bak
+
+# vim
+*.swp
+Session.vim
+Sessionx.vim
+.netrwhist
+
+# ctags
+tags
+.tags
+
+# Eclipse
+*.settings/
+*.externalToolBuilders/
+*.project
+.checkstyle
+.classpath
+
+# Visual Studio Code
+.vscode/
+
+# Windows
+Thumbs.db
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+
+# Generated directories
+build
+doc
+
+# Generated files
+*.jar
+*.class
