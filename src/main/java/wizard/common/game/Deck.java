@@ -10,13 +10,9 @@ import wizard.common.cards.NumberCard;
 import wizard.common.cards.WizardCard;
 
 public class Deck {
-    private final Random rnd;
-
     private final List<Card> deck;
 
     public Deck() {
-        rnd = new Random();
-
         deck = new ArrayList<Card>();
 
         // Add normal cards
@@ -41,7 +37,7 @@ public class Deck {
             return null;
         }
 
-        int n = rnd.nextInt(deck.size());
+        int n = new Random().nextInt(deck.size());
         return deck.remove(n);
     }
 }
