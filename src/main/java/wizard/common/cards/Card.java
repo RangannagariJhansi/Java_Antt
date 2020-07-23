@@ -36,7 +36,7 @@ public abstract class Card implements Serializable, Comparable<Card> {
     }
 
     @Override
-    public int compareTo(Card other) {
+    public int compareTo(final Card other) {
         return getValue() - other.getValue();
     }
 

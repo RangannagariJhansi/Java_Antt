@@ -17,7 +17,7 @@ public class Player {
     private int prediction;
     private int score;
 
-    public Player(final String name, PlayerConnection connection) {
+    public Player(final String name, final PlayerConnection connection) {
         this.name = name;
         this.connection = connection;
 
@@ -25,10 +25,7 @@ public class Player {
         prediction = -1;
     }
 
-    public String getName() {
-        return name;
-    }
-
+    @Override
     public String toString() {
         String handStr = "[ ";
         for (int i = 0; i < hand.size(); i++) {
@@ -45,12 +42,20 @@ public class Player {
         } else if (prediction == -1) {
             return String.format("%s: %s\n", name, handStr);
         } else {
-            return String.format("%s: %s [Predicted: %2d] [Taken: %2d] [Score: %3d]\n", name, handStr, prediction, tricks, score);
+            return String.format("%s: %s"
+                    + " [Predicted: %2d]"
+                    + " [Taken: %2d]"
+                    + " [Score: %3d]\n",
+                    name, handStr, prediction, tricks, score);
         }
     }
 
     public void giveTrick(final Trick trick) {
         tricks++;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void giveHand(final List<Card> hand) {
@@ -62,14 +67,14 @@ public class Player {
         return hand.contains(card);
     }
 
-    public boolean hasColor(Color color) {
+    public boolean hasColor(final Color color) {
         return hand.parallelStream().anyMatch(x -> x.getColor() == color);
-        /**for (Card c : hand) {
+        /*for (Card c : hand) {
             if (c.getColor().equals(color)) {
                 return true;
             }
         }
-        return false;**/
+        return false;*/
     }
 
     public int askPrediction(int upperBorder) {
@@ -89,12 +94,14 @@ public class Player {
             }
 
             if (input > upperBorder) {
-                connection.sendGameError(String.format("You cannot take %d tricks in this round!\n", input));
+                String error = String.format("You cannot take %d tricks in this round!\n", input);
+                connection.sendGameError(error);
                 continue;
             }
 
             if (input == notAllowed) {
-                connection.sendGameError(String.format("You must not predict taking %d tricks", notAllowed));
+                String error = String.format("You must not predict taking %d tricks", notAllowed);
+                connection.sendGameError(error);
                 continue;
             }
 

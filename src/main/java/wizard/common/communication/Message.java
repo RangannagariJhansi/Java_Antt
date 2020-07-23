@@ -9,7 +9,7 @@ public abstract class Message implements Serializable {
     private MessageType type;
     private Object content;
 
-    public Message(MessageType type, Object content) {
+    public Message(final MessageType type, final Object content) {
         this.type = type;
         this.content = content;
     }

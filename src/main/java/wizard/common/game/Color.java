@@ -9,10 +9,11 @@ public enum Color {
 
     private final String str;
 
-    Color(String str) {
+    Color(final String str) {
         this.str = str;
     }
 
+    @Override
     public String toString() {
         return str;
     }

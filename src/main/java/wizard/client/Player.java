@@ -13,11 +13,11 @@ public class Player {
         hand = null;
     }
 
-    public void updateGameStatus(String status) {
+    public void updateGameStatus(final String status) {
         System.out.printf("Game status: %s\n", status);
     }
 
-    public void showGameError(String error) {
+    public void showGameError(final String error) {
         System.out.printf("Game error: %s\n", error);
     }
 

@@ -41,6 +41,7 @@ public class Round {
         trumpColor = trumpCard.getColor();
     }
 
+    @Override
     public String toString() {
         return "Round " +round;
     }
@@ -120,8 +121,7 @@ public class Round {
                 // Player who took the trick gets to start the next trick
                 currentPlayer = winnerId;
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println("IOException - Could not play tricks!");
             e.printStackTrace();
         }

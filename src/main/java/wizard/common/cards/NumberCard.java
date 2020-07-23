@@ -6,7 +6,7 @@ public class NumberCard extends Card {
 
     private static final long serialVersionUID = 1L;
 
-    public NumberCard(final int value, final Color color) {
+    public NumberCard(int value, final Color color) {
         this.value = value;
         this.color = color;
     }
@@ -22,17 +22,17 @@ public class NumberCard extends Card {
         }
 
         switch (color) {
-        case BLUE:
-            return "[B " +v +"]";
-        case GREEN:
-            return "[G " +v +"]";
-        case RED:
-            return "[R " +v +"]";
-        case YELLOW:
-            return "[Y " +v +"]";
-        default:
-            // Should never happen
-            return "[  " +v +"]";
+            case BLUE:
+                return "[B " +v +"]";
+            case GREEN:
+                return "[G " +v +"]";
+            case RED:
+                return "[R " +v +"]";
+            case YELLOW:
+                return "[Y " +v +"]";
+            default:
+                // Should never happen
+                return "[  " +v +"]";
         }
     }
 }

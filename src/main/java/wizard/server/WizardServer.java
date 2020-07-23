@@ -9,13 +9,18 @@ public class WizardServer implements Runnable {
 
     private static final int PORT = 2000;
     private static final int playerCount = 2;
-    private static final String[] playerNames = { "Player Alfa   ", "Player Bravo  ", "Player Charlie", "Player Delta  " };
+    private static final String[] playerNames = {
+        "Player Alfa   ",
+        "Player Bravo  ",
+        "Player Charlie",
+        "Player Delta  " };
 
     private static final ArrayList<Player> players = new ArrayList<Player>();
 
     /**
      * Waits for all clients to connect then starts game logic
      */
+    @Override
     public void run() {
         Thread.currentThread().setName("Game Logic and Sending Thread");
 
@@ -23,7 +28,7 @@ public class WizardServer implements Runnable {
             System.out.println("Wizard Server running and waiting for connections...");
             while (players.size() != playerCount) {
                 Socket client = server.accept();
-                synchronized (players) {
+                synchronized(players) {
                     PlayerConnection con = new PlayerConnection(client);
                     con.start();
                     Player player = new Player(playerNames[players.size()], con);
@@ -40,8 +45,7 @@ public class WizardServer implements Runnable {
 
         // TODO: dynamically calculate number of rounds
         for (int r = 1; r < 5; r++) {
-            Round round;
-            round = new Round(r, players);
+            Round round = new Round(r, players);
             round.play();
         }
 

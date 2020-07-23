@@ -4,7 +4,7 @@ public class VoidMessage extends Message {
 
     private static final long serialVersionUID = 1L;
 
-    public VoidMessage(MessageType type) {
+    public VoidMessage(final MessageType type) {
         super(type, null);
     }
 }

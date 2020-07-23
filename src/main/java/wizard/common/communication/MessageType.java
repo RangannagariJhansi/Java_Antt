@@ -14,7 +14,7 @@ public enum MessageType {
 
     private final String representation;
 
-    MessageType(String representation) {
+    MessageType(final String representation) {
         this.representation = representation;
     }
 

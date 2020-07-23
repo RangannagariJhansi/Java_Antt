@@ -11,11 +11,13 @@ public class WizardCard extends Card {
         this.color = Color.CLEAR;
     }
 
-    public boolean isWizard() {
-        return true;
-    }
-
+    @Override
     public String toString() {
         return "[W   ]";
+    }
+
+    @Override
+    public boolean isWizard() {
+        return true;
     }
 }

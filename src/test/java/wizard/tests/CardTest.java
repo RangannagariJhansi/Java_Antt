@@ -1,8 +1,8 @@
 package wizard.tests;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import        org.junit.jupiter.api.Test;
 
 import wizard.common.cards.Card;
 import wizard.common.cards.JesterCard;
@@ -15,17 +15,17 @@ class CardTest {
     @Test
     void testEquals() {
         // Equal (self)
-        Card c1 = new NumberCard(10, Color.RED);
+        final Card c1 = new NumberCard(10, Color.RED);
         assertTrue(c1.equals(c1));
 
         // Equal
-        Card c2 = new NumberCard(10, Color.RED);
+        final Card c2 = new NumberCard(10, Color.RED);
         assertTrue(c1.equals(c2));
 
         // Normal not equal
-        Card c3 = new NumberCard(10, Color.RED);
-        Card c4 = new NumberCard(12, Color.RED);
-        Card c5 = new NumberCard(12, Color.BLUE);
+        final Card c3 = new NumberCard(10, Color.RED);
+        final Card c4 = new NumberCard(12, Color.RED);
+        final Card c5 = new NumberCard(12, Color.BLUE);
         assertFalse(c3.equals(c4));
         assertFalse(c4.equals(c5));
 
@@ -39,10 +39,10 @@ class CardTest {
     @Test
     void testIsWizard() {
         // Number cards are no wizards
-        Card c1 = new NumberCard(1, Color.BLUE);
-        Card c2 = new NumberCard(2, Color.GREEN);
-        Card c3 = new NumberCard(3, Color.RED);
-        Card c4 = new NumberCard(4, Color.YELLOW);
+        final Card c1 = new NumberCard(1, Color.BLUE);
+        final Card c2 = new NumberCard(2, Color.GREEN);
+        final Card c3 = new NumberCard(3, Color.RED);
+        final Card c4 = new NumberCard(4, Color.YELLOW);
 
         assertFalse(c1.isWizard());
         assertFalse(c2.isWizard());
@@ -50,11 +50,11 @@ class CardTest {
         assertFalse(c4.isWizard());
 
         // A jester is not a wizard
-        Card c5 = new JesterCard();
+        final Card c5 = new JesterCard();
         assertFalse(c5.isWizard());
 
         // Wizard is wizard
-        Card c6 = new WizardCard();
+        final Card c6 = new WizardCard();
         assertTrue(c6.isWizard());
     }
 

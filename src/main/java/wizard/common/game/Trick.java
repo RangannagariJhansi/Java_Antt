@@ -8,13 +8,14 @@ import wizard.common.cards.Card;
 public class Trick {
 
     private final Color trump;
-    private List<Card> cards;
+    private final List<Card> cards;
 
-    public Trick(Color trump) {
+    public Trick(final Color trump) {
         this.trump = trump;
         cards = new ArrayList<Card>();
     }
 
+    @Override
     public String toString() {
         String str = "Trick: ";
 
@@ -29,12 +30,12 @@ public class Trick {
         return str;
     }
 
-    public void add(Card card) {
+    public void add(final Card card) {
         cards.add(card);
     }
 
     // TODO: Remove !
-    public int cardId(Card card) {
+    public int cardId(final Card card) {
         return cards.indexOf(card);
     }
 
@@ -70,7 +71,9 @@ public class Trick {
         // The trick gets taken by the highest trump-colored card
         winner = cards.stream()
                       .filter(x -> x.getColor() == trump)
-                      .max((a, b) -> { return a.compareTo(b); })
+                      .max((a, b) -> {
+                          return a.compareTo(b);
+                      })
                       .orElse(null);
 
         if (winner != null) {
@@ -90,7 +93,9 @@ public class Trick {
         // The trick gets taken by the highest card colored the same as the first color.
         return cards.stream()
                     .filter(x -> x.getColor() == firstColor)
-                    .max((a, b) -> { return a.compareTo(b); })
+                    .max((a, b) -> {
+                        return a.compareTo(b);
+                    })
                     .orElse(null);
     }
 

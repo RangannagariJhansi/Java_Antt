@@ -1,8 +1,8 @@
 package wizard.tests;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import        org.junit.jupiter.api.Test;
 
 import wizard.common.cards.Card;
 import wizard.common.cards.JesterCard;
@@ -25,10 +25,10 @@ class TrickTest {
         {
             Trick t = new Trick(Color.RED);
             Card[] cards = {
-                    new NumberCard(10, Color.BLUE),
-                    new NumberCard(13, Color.YELLOW),
-                    new WizardCard(),
-                    new NumberCard(15, Color.RED)
+                new NumberCard(10, Color.BLUE),
+                new NumberCard(13, Color.YELLOW),
+                new WizardCard(),
+                new NumberCard(15, Color.RED)
             };
             for (Card c : cards) {
                 t.add(c);
@@ -40,15 +40,15 @@ class TrickTest {
         {
             Trick t = new Trick(Color.BLUE);
             Card[] cards = {
-                    new NumberCard(6, Color.RED),
-                    new NumberCard(7, Color.YELLOW),
-                    new JesterCard(),
-                    new NumberCard(2, Color.BLUE),
-                    new JesterCard(),
-                    new NumberCard(1, Color.BLUE),
-                    new NumberCard(8, Color.RED),
-                    new NumberCard(3, Color.BLUE),
-                    new NumberCard(9, Color.GREEN)
+                new NumberCard(6, Color.RED),
+                new NumberCard(7, Color.YELLOW),
+                new JesterCard(),
+                new NumberCard(2, Color.BLUE),
+                new JesterCard(),
+                new NumberCard(1, Color.BLUE),
+                new NumberCard(8, Color.RED),
+                new NumberCard(3, Color.BLUE),
+                new NumberCard(9, Color.GREEN)
             };
             for (Card c : cards) {
                 t.add(c);
@@ -60,15 +60,15 @@ class TrickTest {
         {
             Trick t = new Trick(Color.BLUE);
             Card[] cards = {
-                    new JesterCard(),
-                    new NumberCard(1, Color.RED),
-                    new NumberCard(5, Color.YELLOW),
-                    new JesterCard(),
-                    new NumberCard(7, Color.GREEN),
-                    new NumberCard(2, Color.RED),
-                    new NumberCard(10, Color.YELLOW),
-                    new NumberCard(1, Color.RED),
-                    new NumberCard(12, Color.GREEN)
+                new JesterCard(),
+                new NumberCard(1, Color.RED),
+                new NumberCard(5, Color.YELLOW),
+                new JesterCard(),
+                new NumberCard(7, Color.GREEN),
+                new NumberCard(2, Color.RED),
+                new NumberCard(10, Color.YELLOW),
+                new NumberCard(1, Color.RED),
+                new NumberCard(12, Color.GREEN)
             };
             for (Card c : cards) {
                 t.add(c);
@@ -80,9 +80,9 @@ class TrickTest {
         {
             Trick t = new Trick(Color.BLUE);
             Card[] cards = {
-                    new JesterCard(),
-                    new JesterCard(),
-                    new JesterCard(),
+                new JesterCard(),
+                new JesterCard(),
+                new JesterCard(),
             };
             for (Card c : cards) {
                 t.add(c);

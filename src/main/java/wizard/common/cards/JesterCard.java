@@ -11,6 +11,7 @@ public class JesterCard extends Card {
         this.color = Color.CLEAR;
     }
 
+    @Override
     public String toString() {
         return "[J   ]";
     }

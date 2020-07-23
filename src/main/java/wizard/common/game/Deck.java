@@ -10,9 +10,9 @@ import wizard.common.cards.NumberCard;
 import wizard.common.cards.WizardCard;
 
 public class Deck {
-    private Random rnd;
+    private final Random rnd;
 
-    private List<Card> deck;
+    private final List<Card> deck;
 
     public Deck() {
         rnd = new Random();

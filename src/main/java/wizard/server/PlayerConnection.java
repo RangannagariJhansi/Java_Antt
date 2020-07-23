@@ -27,7 +27,7 @@ public class PlayerConnection extends Thread {
     private Object lastAnswerContent = null;
     private MessageType lastAnswerType = null;
 
-    public PlayerConnection(Socket client) {
+    public PlayerConnection(final Socket client) {
         this.client = client;
         try {
             out = new ObjectOutputStream(new BufferedOutputStream(client.getOutputStream()));
@@ -43,6 +43,7 @@ public class PlayerConnection extends Thread {
         }
     }
 
+    @Override
     public String toString() {
         String str = client.getInetAddress().getHostAddress();
         str += ":";
@@ -58,7 +59,10 @@ public class PlayerConnection extends Thread {
     public void run() {
         this.setName(String.format("PlayerConnection Thread '%s'", this));
 
-        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(client.getInputStream()))) {
+        try (ObjectInputStream in = new ObjectInputStream(
+            new BufferedInputStream(
+                client.getInputStream()))) {
+
             while (true) {
                 Object object = in.readObject();
                 if (object instanceof Message) {
@@ -89,52 +93,52 @@ public class PlayerConnection extends Thread {
         }
     }
 
-    private void receive(Message message) {
+    private void receive(final Message message) {
         if (Settings.DEBUG_NETWORK_COMMUNICATION) {
             System.out.println("Received a message");
         }
 
-        switch(message.getType()) {
-        case ANSWER_PREDICTION:
-            if (!(message instanceof IntMessage)) {
-                System.err.println("Received message object from client is instance of unexpected class");
+        switch (message.getType()) {
+            case ANSWER_PREDICTION:
+                if (!(message instanceof IntMessage)) {
+                    System.err.println("Received message object from client is instance of unexpected class");
+                    break;
+                }
+                synchronized(this) {
+                    lastAnswerType = message.getType();
+                    lastAnswerContent = message.getContent();
+                    notify();
+                }
                 break;
-            }
-            synchronized(this) {
-                lastAnswerType = message.getType();
-                lastAnswerContent = message.getContent();
-                notify();
-            }
-            break;
-        case ANSWER_TRICK_START:
-        case ANSWER_TRICK_CARD:
-            if (!(message instanceof CardMessage)) {
-                System.err.println("Received message object from client is instance of unexpected class");
+            case ANSWER_TRICK_START:
+            case ANSWER_TRICK_CARD:
+                if (!(message instanceof CardMessage)) {
+                    System.err.println("Received message object from client is instance of unexpected class");
+                    break;
+                }
+                synchronized(this) {
+                    lastAnswerType = message.getType();
+                    lastAnswerContent = message.getContent();
+                    notify();
+                }
                 break;
-            }
-            synchronized(this) {
-                lastAnswerType = message.getType();
-                lastAnswerContent = message.getContent();
-                notify();
-            }
-            break;
-        default:
-            System.err.println("Received message from client has unknown type");
-            break;
+            default:
+                System.err.println("Received message from client has unknown type");
+                break;
         }
     }
 
-    private void send(Message message) throws IOException {
+    private void send(final Message message) throws IOException {
         out.writeObject(message);
         out.flush();
         out.reset();
     }
 
-    private void send(MessageType type) throws IOException {
+    private void send(final MessageType type) throws IOException {
         send(new VoidMessage(type));
     }
 
-    private void send(MessageType type, String content) throws IOException {
+    private void send(final MessageType type, final String content) throws IOException {
         if (content == null) {
             send(new VoidMessage(type));
         } else {
@@ -142,7 +146,7 @@ public class PlayerConnection extends Thread {
         }
     }
 
-    private void send(MessageType type, Card[] content) throws IOException {
+    private void send(final MessageType type, final Card[] content) throws IOException {
         if (content == null) {
             send(new VoidMessage(type));
         } else {
@@ -150,7 +154,7 @@ public class PlayerConnection extends Thread {
         }
     }
 
-    public void sendGameError(String message) {
+    public void sendGameError(final String message) {
         try {
             send(MessageType.GAME_ERROR, message);
         } catch (IOException e) {
