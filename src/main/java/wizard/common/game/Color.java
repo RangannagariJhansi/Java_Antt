@@ -7,14 +7,14 @@ public enum Color {
     YELLOW ("Yellow"),
     CLEAR  ("none");
 
-    private final String str;
+    private final String representation;
 
-    Color(final String str) {
-        this.str = str;
+    Color(final String representation) {
+        this.representation = representation;
     }
 
     @Override
     public String toString() {
-        return str;
+        return representation;
     }
 }
