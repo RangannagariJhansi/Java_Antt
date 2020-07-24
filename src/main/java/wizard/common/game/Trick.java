@@ -10,11 +10,22 @@ public class Trick {
     private final Color trump;
     private final List<Card> cards;
 
+    /**
+     * Create a new {@code Trick} with the given trump color.
+     *
+     * @param trump The trump color for this trick
+     */
     public Trick(final Color trump) {
         this.trump = trump;
         cards = new ArrayList<Card>();
     }
 
+    /**
+     * Returns a string representation of this trick.
+     * String will fit on one line and will not end with newline character.
+     *
+     * @return String representation of this trick
+     */
     @Override
     public String toString() {
         String str = "Trick: ";
@@ -30,6 +41,11 @@ public class Trick {
         return str;
     }
 
+    /**
+     * Adds a new card to this trick.
+     *
+     * @param card The card to add to this trick
+     */
     public void add(final Card card) {
         cards.add(card);
     }
@@ -39,6 +55,11 @@ public class Trick {
         return cards.indexOf(card);
     }
 
+    /**
+     * Returns the first color of this trick.
+     *
+     * @return The first color of this trick.
+     */
     public Color firstColor() {
         // Return first color in trick
         return cards.stream()
@@ -48,6 +69,11 @@ public class Trick {
                     .orElse(Color.CLEAR);
     }
 
+    /**
+     * Returns which card takes this trick.
+     *
+     * @return The winner card which takes this trick
+     */
     public Card takenBy() {
         // Trick without cards cannot be taken by anyone
         if (cards.size() == 0) {

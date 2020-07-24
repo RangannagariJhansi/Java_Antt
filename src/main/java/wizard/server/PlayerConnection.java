@@ -27,6 +27,11 @@ public class PlayerConnection extends Thread {
     private Object lastAnswerContent = null;
     private MessageType lastAnswerType = null;
 
+    /**
+     * Create a new {@code PlayerConnection} with given client socket.
+     *
+     * @param client The client socket of this {@code PlayerConnection}
+     */
     public PlayerConnection(final Socket client) {
         this.client = client;
         try {
@@ -43,6 +48,9 @@ public class PlayerConnection extends Thread {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         String str = client.getInetAddress().getHostAddress();
@@ -54,8 +62,10 @@ public class PlayerConnection extends Thread {
 
 
     /**
-     * Read messages from client.
+     * Listen for messages from client. Messages will be handled by receive().
+     * Will block indefinitely. Meant to be run in its own thread.
      */
+    @Override
     public void run() {
         this.setName(String.format("PlayerConnection Thread '%s'", this));
 
@@ -93,6 +103,12 @@ public class PlayerConnection extends Thread {
         }
     }
 
+    /**
+     * Handle message received from client.
+     * Decide what type of message is received and call helper functions.
+     *
+     * @param message The message which was received
+     */
     private void receive(final Message message) {
         if (Settings.DEBUG_NETWORK_COMMUNICATION) {
             System.out.println("Received a message");
@@ -128,16 +144,35 @@ public class PlayerConnection extends Thread {
         }
     }
 
+    /**
+     * Send message to connected client.
+     *
+     * @param message The message to send
+     * @throws IOException If sending to server fails
+     */
     private void send(final Message message) throws IOException {
         out.writeObject(message);
         out.flush();
         out.reset();
     }
 
+    /**
+     * Send void-message to connected client.
+     *
+     * @param type The type of message to send
+     * @throws IOException If sending to server fails
+     */
     private void send(final MessageType type) throws IOException {
         send(new VoidMessage(type));
     }
 
+    /**
+     * Send string-message to connected client.
+     *
+     * @param type The type of message to send
+     * @param content The string content of the message to send
+     * @throws IOException If sending to server fails
+     */
     private void send(final MessageType type, final String content) throws IOException {
         if (content == null) {
             send(new VoidMessage(type));
@@ -146,6 +181,13 @@ public class PlayerConnection extends Thread {
         }
     }
 
+    /**
+     * Send cards-message to connected client.
+     *
+     * @param type The type of message to send
+     * @param content The cards content of the message to send
+     * @throws IOException If sending to server fails
+     */
     private void send(final MessageType type, final Card[] content) throws IOException {
         if (content == null) {
             send(new VoidMessage(type));
@@ -154,6 +196,11 @@ public class PlayerConnection extends Thread {
         }
     }
 
+    /**
+     * Send game error to connected client.
+     *
+     * @param message The game error message to send
+     */
     public void sendGameError(final String message) {
         try {
             send(MessageType.GAME_ERROR, message);
@@ -163,6 +210,11 @@ public class PlayerConnection extends Thread {
         }
     }
 
+    /**
+     * Send update-hand message to connected client.
+     *
+     * @param hand The hand to update the client to
+     */
     public void updateHand(final Card[] hand) {
         if (Settings.DEBUG_NETWORK_COMMUNICATION) {
             System.out.printf("Sending updated hand to player '%s'...\n", this);

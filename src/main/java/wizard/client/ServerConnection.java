@@ -24,6 +24,9 @@ public class ServerConnection implements Runnable {
 
     private final Player player;
 
+    /**
+     * Create new {@code ServerConnection} object.
+     */
     public ServerConnection() {
         player = new Player();
 
@@ -42,8 +45,10 @@ public class ServerConnection implements Runnable {
     }
 
     /**
-     * Listen for messages from server
+     * Listen for messages from server. Messages will be handled by receive().
+     * Will block indefinitely. Meant to be run in its own thread.
      */
+    @Override
     public void run() {
         Thread.currentThread().setName("ServerConnection Thread");
 
@@ -77,12 +82,12 @@ public class ServerConnection implements Runnable {
     }
 
     /**
-     * Handle message received by server
+     * Handle message received from server.
+     * Decide what type of message is received and call helper functions.
      *
      * @param message The message which was received
-     * @throws IOException
      */
-    private void receive(final Message message) throws IOException {
+    private void receive(final Message message) {
         switch (message.getType()) {
             case GAME_ERROR:
                 if (!(message instanceof StringMessage)) {
@@ -132,39 +137,76 @@ public class ServerConnection implements Runnable {
         }
     }
 
+    /**
+     * Handle received game error message.
+     *
+     * @param message The message which was received
+     */
     private void receiveGameError(final StringMessage message) {
         player.showGameError(message.getContent());
     }
 
+    /**
+     * Handle received game status message.
+     *
+     * @param message The message which was received
+     */
     private void receiveGameStatus(final StringMessage message) {
         player.updateGameStatus(message.getContent());
     }
 
+    /**
+     * Handle received update-hand message.
+     *
+     * @param message The message which was received
+     */
     private void receiveUpdateHand(final CardsMessage message) {
         player.updateHand(message.getContent());
     }
 
+    /**
+     * Handle received ask-prediction message.
+     */
     private void receiveAskPrediction() {
         int prediction = player.askPrediction();
         answerPrediction(prediction);
     }
 
+    /**
+     * Handle received ask-trick-start message.
+     */
     private void receiveAskTrickStart() {
         Card card = player.askTrickStart();
         answerTrickStart(card);
     }
 
+    /**
+     * Handle received ask-trick-card message.
+     */
     private void receiveAskTrickCard() {
         Card card = player.askTrickCard();
         answerTrickCard(card);
     }
 
+    /**
+     * Send message to connected server.
+     *
+     * @param message The message to send
+     * @throws IOException If sending to server fails
+     */
     private void send(final Message message) throws IOException {
         out.writeObject(message);
         out.flush();
         out.reset();
     }
 
+    /**
+     * Send card-message to connected server.
+     *
+     * @param type The type of message to send
+     * @param content The card content of the message to send
+     * @throws IOException If sending to server fails
+     */
     private void send(final MessageType type, final Card content) throws IOException {
         if (content == null) {
             System.err.println("Card is null - Sending as VoidMessage instead");
@@ -174,6 +216,13 @@ public class ServerConnection implements Runnable {
         }
     }
 
+    /**
+     * Send integer-message to connected server.
+     *
+     * @param type The type of message to send
+     * @param content The integer content of the message to send
+     * @throws IOException If sending to server fails
+     */
     private void send(final MessageType type, final Integer content) throws IOException {
         if (content == null) {
             System.err.println("Integer is null - Sending as VoidMessage instead");
@@ -183,6 +232,11 @@ public class ServerConnection implements Runnable {
         }
     }
 
+    /**
+     * Sends a prediction-answer to the connected server.
+     *
+     * @param prediction The prediction to be sent to the server
+     */
     private void answerPrediction(int prediction) {
         try {
             send(MessageType.ANSWER_PREDICTION, prediction);
@@ -192,6 +246,11 @@ public class ServerConnection implements Runnable {
         }
     }
 
+    /**
+     * Sends a trick-start answer to the connected server.
+     *
+     * @param card The card to start the trick with
+     */
     private void answerTrickStart(final Card card) {
         try {
             send(MessageType.ANSWER_TRICK_START, card);
@@ -201,6 +260,11 @@ public class ServerConnection implements Runnable {
         }
     }
 
+    /**
+     * Sends a trick-card answer to the connected server.
+     *
+     * @param card The card to play
+     */
     private void answerTrickCard(final Card card) {
         try {
             send(MessageType.ANSWER_TRICK_CARD, card);

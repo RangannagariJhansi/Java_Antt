@@ -14,10 +14,19 @@ public enum MessageType {
 
     private final String representation;
 
+    /**
+     * Creates a new {@code MessageType} enum with given string representation.
+     *
+     * @param representation String representation of new {@code MessageType} enum
+     */
     MessageType(final String representation) {
         this.representation = representation;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String toString() {
         return representation;
     }

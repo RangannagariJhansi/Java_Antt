@@ -9,6 +9,9 @@ public class Player {
 
     private Card[] hand;
 
+    /**
+     * Create new @{code Player} with empty hand.
+     */
     public Player() {
         hand = null;
     }
@@ -21,12 +24,25 @@ public class Player {
         System.out.printf("Game error: %s\n", error);
     }
 
+    /**
+     * Update the hand of the player.
+     * Old hand will be discarded.
+     *
+     * @param hand The new hand to apply to this player
+     */
     public void updateHand(final Card[] hand) {
         this.hand = hand;
 
         System.out.printf("Hand: %s\n", Cards.toString(hand));
     }
 
+    /**
+     * Asks the player for a prediction how many trick he will take this
+     * round.
+     * Will block until the player has chosen a prediction.
+     *
+     * @return The number of tricks the player predicted.
+     */
     public int askPrediction() {
         // TODO: Say trump color
         System.out.printf("Hand: %s\n", Cards.toString(hand));
@@ -49,6 +65,15 @@ public class Player {
         return input;
     }
 
+    /**
+     * Helper function. Generalizes askTrickStart() and askTrickCard().
+     * Will block until player has chosen a card.
+     *
+     * @param start Whether required card is the first card in a trick
+     *        (askTrickStart()) or a trick already exists (askTrickCard()).
+     *
+     * @return The card the player wants to play
+     */
     private Card askTrick(boolean start) {
         if (start) {
             System.out.println("You have to start a trick. Cards:");
@@ -82,10 +107,22 @@ public class Player {
         return hand[input];
     }
 
+    /**
+     * Asks the player for a card to start a new trick.
+     * Will block until player has chosen a card.
+     *
+     * @return The card the player wants to play
+     */
     public Card askTrickStart() {
         return askTrick(true);
     }
 
+    /**
+     * Asks the player for a card to play to existing trick.
+     * Will block until player has chosen a card.
+     *
+     * @return The card the player wants to play
+     */
     public Card askTrickCard() {
         // TODO: 'Farbe zugeben' enforcen!
         return askTrick(false);

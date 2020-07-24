@@ -18,7 +18,8 @@ public class WizardServer implements Runnable {
     private static final ArrayList<Player> players = new ArrayList<Player>();
 
     /**
-     * Waits for all clients to connect then starts game logic
+     * Waits for all clients to connect. Then starts game logic (including
+     * sending of messages)
      */
     @Override
     public void run() {

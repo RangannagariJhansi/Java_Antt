@@ -12,6 +12,9 @@ import wizard.common.cards.WizardCard;
 public class Deck {
     private final List<Card> deck;
 
+    /**
+     * Create a new {@code Deck} with all cards.
+     */
     public Deck() {
         deck = new ArrayList<Card>();
 
@@ -30,6 +33,11 @@ public class Deck {
         }
     }
 
+    /**
+     * Removes a random card from the deck and returns it.
+     *
+     * @return Random card
+     */
     public Card takeRandom() {
         if (deck.size() < 1) {
             // TODO: Error

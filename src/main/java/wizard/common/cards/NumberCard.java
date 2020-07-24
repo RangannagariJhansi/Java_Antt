@@ -6,6 +6,12 @@ public class NumberCard extends Card {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Create new number card of given value and color.
+     *
+     * @param value The value of the created card
+     * @param color The color of the created card
+     */
     public NumberCard(int value, final Color color) {
         this.value = value;
         this.color = color;

@@ -6,6 +6,9 @@ public class JesterCard extends Card {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Create new jester card.
+     */
     public JesterCard() {
         this.value = 0;
         this.color = Color.CLEAR;
