@@ -10,8 +10,7 @@ public class JesterCard extends Card {
      * Create new jester card.
      */
     public JesterCard() {
-        this.value = 0;
-        this.color = Color.CLEAR;
+        super(0, Color.CLEAR);
     }
 
     @Override

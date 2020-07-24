@@ -13,8 +13,7 @@ public class NumberCard extends Card {
      * @param color The color of the created card
      */
     public NumberCard(int value, final Color color) {
-        this.value = value;
-        this.color = color;
+        super(value, color);
     }
 
     @Override

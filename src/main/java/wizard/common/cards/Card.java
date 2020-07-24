@@ -12,6 +12,17 @@ public abstract class Card implements Serializable, Comparable<Card> {
     protected Color color;
 
     /**
+     * Create new card of given value and color.
+     *
+     * @param value The value of the created card
+     * @param color The color of the created card
+     */
+    public Card(int value, Color color) {
+        this.value = value;
+        this.color = color;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

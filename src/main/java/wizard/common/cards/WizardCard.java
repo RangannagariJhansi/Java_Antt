@@ -10,8 +10,7 @@ public class WizardCard extends Card {
      * Create new wizard card.
      */
     public WizardCard() {
-        this.value = 14;
-        this.color = Color.CLEAR;
+        super(14, Color.CLEAR);
     }
 
     @Override
