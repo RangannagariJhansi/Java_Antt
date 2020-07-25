@@ -98,10 +98,10 @@ public class Round {
 
             // Ask all players for their cards
             System.out.println("Asking players for their cards...");
-            trick.add(currentPlayer().askTrickStart());
+            trick.add(currentPlayer().askTrickCard());
             System.out.println(trick);
             for (int i = 0; i < players.size() - 1; i++) {
-                trick.add(nextPlayer().askTrickCard(trick));
+                trick.add(nextPlayer().askTrickCard());
                 System.out.println(trick);
             }
             System.out.println();

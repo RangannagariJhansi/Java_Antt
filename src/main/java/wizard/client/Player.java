@@ -66,20 +66,13 @@ public class Player {
     }
 
     /**
-     * Helper function. Generalizes askTrickStart() and askTrickCard().
+     * Asks the player for a card to play.
      * Will block until player has chosen a card.
-     *
-     * @param start Whether required card is the first card in a trick
-     *        (askTrickStart()) or a trick already exists (askTrickCard()).
      *
      * @return The card the player wants to play
      */
-    private Card askTrick(boolean start) {
-        if (start) {
-            System.out.println("You have to start a trick. Cards:");
-        } else {
-            System.out.println("Select card to play to trick. Cards:");
-        }
+    public Card askTrickCard() {
+        System.out.println("Select card to play. Cards:");
         for (int i = 0; i < hand.length; i++) {
             System.out.printf("(%d)  %s\n", i, hand[i]);
         }
@@ -101,30 +94,11 @@ public class Player {
                 continue;
             }
 
+            // TODO: 'Farbe zugeben' enforcen!
+
             done = true;
         }
 
         return hand[input];
-    }
-
-    /**
-     * Asks the player for a card to start a new trick.
-     * Will block until player has chosen a card.
-     *
-     * @return The card the player wants to play
-     */
-    public Card askTrickStart() {
-        return askTrick(true);
-    }
-
-    /**
-     * Asks the player for a card to play to existing trick.
-     * Will block until player has chosen a card.
-     *
-     * @return The card the player wants to play
-     */
-    public Card askTrickCard() {
-        // TODO: 'Farbe zugeben' enforcen!
-        return askTrick(false);
     }
 }

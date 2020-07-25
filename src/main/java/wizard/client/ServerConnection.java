@@ -117,13 +117,6 @@ public class ServerConnection implements Runnable {
                 }
                 receiveAskPrediction();
                 break;
-            case ASK_TRICK_START:
-                if (!(message instanceof VoidMessage)) {
-                    System.err.println("Received message object from client is instance of unexpected class");
-                    break;
-                }
-                receiveAskTrickStart();
-                break;
             case ASK_TRICK_CARD:
                 if (!(message instanceof VoidMessage)) {
                     System.err.println("Received message object from client is instance of unexpected class");
@@ -170,14 +163,6 @@ public class ServerConnection implements Runnable {
     private void receiveAskPrediction() {
         int prediction = player.askPrediction();
         answerPrediction(prediction);
-    }
-
-    /**
-     * Handle received ask-trick-start message.
-     */
-    private void receiveAskTrickStart() {
-        Card card = player.askTrickStart();
-        answerTrickStart(card);
     }
 
     /**
@@ -242,20 +227,6 @@ public class ServerConnection implements Runnable {
             send(MessageType.ANSWER_PREDICTION, prediction);
         } catch (IOException e) {
             System.err.printf("IOException - Could not send prediction '%d' to server !\n", prediction);
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Sends a trick-start answer to the connected server.
-     *
-     * @param card The card to start the trick with
-     */
-    private void answerTrickStart(final Card card) {
-        try {
-            send(MessageType.ANSWER_TRICK_START, card);
-        } catch (IOException e) {
-            System.err.printf("IOException - Could not send trick start card '%s' to server!\n", card);
             e.printStackTrace();
         }
     }

@@ -162,33 +162,17 @@ public class Player {
     }
 
     /**
-     * Asks the player for a card to start a new trick.
+     * Asks the player for a card to play.
      * Will block until player has chosen a card.
      *
      * @return The card the player wants to play
      */
-    public Card askTrickStart() {
-        return askTrickCard(null);
-    }
-
-    /**
-     * Asks the player for a card to play to existing trick.
-     * Will block until player has chosen a card.
-     *
-     * @param trick The existing trick to play a card to
-     * @return The card the player wants to play
-     */
-    public Card askTrickCard(final Trick trick) {
+    public Card askTrickCard() {
         Card selectedCard = null;
 
         boolean done = false;
         while (!done) {
-            // If there is no trick start a new one
-            if (trick == null) {
-                selectedCard = connection.askTrickStart();
-            } else {
-                selectedCard = connection.askTrickCard(trick);
-            }
+            selectedCard = connection.askTrickCard();
 
             if (!hasCard(selectedCard)) {
                 connection.updateHand(hand.toArray(new Card[hand.size()]));

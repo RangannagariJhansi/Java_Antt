@@ -17,7 +17,6 @@ import wizard.common.communication.Message;
 import wizard.common.communication.MessageType;
 import wizard.common.communication.StringMessage;
 import wizard.common.communication.VoidMessage;
-import wizard.common.game.Trick;
 
 public class PlayerConnection extends Thread {
 
@@ -126,7 +125,6 @@ public class PlayerConnection extends Thread {
                     notify();
                 }
                 break;
-            case ANSWER_TRICK_START:
             case ANSWER_TRICK_CARD:
                 if (!(message instanceof CardMessage)) {
                     System.err.println("Received message object from client is instance of unexpected class");
@@ -261,41 +259,13 @@ public class PlayerConnection extends Thread {
         return prediction;
     }
 
-    public Card askTrickStart() {
-        if (Settings.DEBUG_NETWORK_COMMUNICATION) {
-            System.out.printf("Asking client '%s' for trick start...\n", this);
-        }
-
-        try {
-            send(MessageType.ASK_TRICK_START);
-        } catch (IOException e) {
-            System.err.printf("IOException - Could not ask player '%s' for trick start!\n", this);
-            e.printStackTrace();
-        }
-
-        synchronized(this) {
-            while (lastAnswerType != MessageType.ANSWER_TRICK_START) {
-                if (Settings.DEBUG_NETWORK_COMMUNICATION) {
-                    System.out.printf("Waiting for answer of client '%s'...\n", this);
-                }
-
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    System.err.println("Thread interrupted!");
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
-
-        Card card = (Card)(lastAnswerContent);
-        lastAnswerContent = null;
-        lastAnswerType = null;
-        return card;
-    }
-
-    public Card askTrickCard(final Trick trick) {
+    /**
+     * Sends a message to client prompting player to select a card.
+     * Will block until player has chosen a card.
+     *
+     * @return The card the player wants to play
+     */
+    public Card askTrickCard() {
         if (Settings.DEBUG_NETWORK_COMMUNICATION) {
             System.out.printf("Asking client '%s' for trick card...\n", this);
         }
