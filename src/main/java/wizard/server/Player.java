@@ -1,6 +1,5 @@
 package wizard.server;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,7 +167,7 @@ public class Player {
      *
      * @return The card the player wants to play
      */
-    public Card askTrickStart() throws IOException {
+    public Card askTrickStart() {
         return askTrickCard(null);
     }
 
@@ -179,7 +178,7 @@ public class Player {
      * @param trick The existing trick to play a card to
      * @return The card the player wants to play
      */
-    public Card askTrickCard(final Trick trick) throws IOException {
+    public Card askTrickCard(final Trick trick) {
         Card selectedCard = null;
 
         boolean done = false;
