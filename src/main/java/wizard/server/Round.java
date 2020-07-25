@@ -55,6 +55,7 @@ public class Round {
 
         for (Player p : players) {
             status += p;
+            status += "\n";
         }
 
         return status;

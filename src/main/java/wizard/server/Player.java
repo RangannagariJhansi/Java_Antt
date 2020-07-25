@@ -47,14 +47,14 @@ public class Player {
         handStr += " ]";
 
         if (prediction == -1 && hand.size() == 0) {
-            return String.format("%s\n", name);
+            return String.format("%s", name);
         } else if (prediction == -1) {
-            return String.format("%s: %s\n", name, handStr);
+            return String.format("%s: %s", name, handStr);
         } else {
             return String.format("%s: %s"
                     + " [Predicted: %2d]"
                     + " [Taken: %2d]"
-                    + " [Score: %3d]\n",
+                    + " [Score: %3d]",
                     name, handStr, prediction, tricks, score);
         }
     }
