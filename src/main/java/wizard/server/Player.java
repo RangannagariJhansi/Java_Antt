@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wizard.common.cards.Card;
+import wizard.common.cards.Cards;
 import wizard.common.game.Color;
 import wizard.common.game.Trick;
 
@@ -35,27 +36,21 @@ public class Player {
      */
     @Override
     public String toString() {
-        String handStr = "[ ";
-        for (int i = 0; i < hand.size(); i++) {
-            handStr += hand.get(i);
-
-            if (i < hand.size() - 1) {
-                handStr += ", ";
-            }
-        }
-        handStr += " ]";
+        String handStr = Cards.toString(hand);
 
         if (prediction == -1 && hand.size() == 0) {
-            return String.format("%s", name);
-        } else if (prediction == -1) {
-            return String.format("%s: %s", name, handStr);
-        } else {
-            return String.format("%s: %s"
-                    + " [Predicted: %2d]"
-                    + " [Taken: %2d]"
-                    + " [Score: %3d]",
-                    name, handStr, prediction, tricks, score);
+            return name;
         }
+
+        if (prediction == -1) {
+            return String.format("%s: %s", name, handStr);
+        }
+
+        return String.format("%s: %s"
+                + " [Predicted: %2d]"
+                + " [Taken: %2d]"
+                + " [Score: %3d]",
+                name, handStr, prediction, tricks, score);
     }
 
     /**
