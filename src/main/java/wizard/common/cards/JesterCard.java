@@ -13,8 +13,11 @@ public class JesterCard extends Card {
         super(0, Color.CLEAR);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String toString() {
-        return "[J   ]";
+    protected String toSimpleString() {
+        return "J";
     }
 }

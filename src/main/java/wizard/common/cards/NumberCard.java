@@ -16,28 +16,24 @@ public class NumberCard extends Card {
         super(value, color);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String toString() {
-        // TODO: Make this prettier
-        String v;
-        if (value < 10) {
-            v = +value + " ";
-        } else {
-            v = Integer.toString(value);
-        }
-
+    protected String toSimpleString() {
         switch (color) {
             case BLUE:
-                return "[B " +v +"]";
+                return "B " +value;
             case GREEN:
-                return "[G " +v +"]";
+                return "G " +value;
             case RED:
-                return "[R " +v +"]";
+                return "R " +value;
             case YELLOW:
-                return "[Y " +v +"]";
+                return "Y " +value;
             default:
+            case CLEAR:
                 // Should never happen
-                return "[  " +v +"]";
+                return "? " +value;
         }
     }
 }

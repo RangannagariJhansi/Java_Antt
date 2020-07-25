@@ -13,9 +13,12 @@ public class WizardCard extends Card {
         super(14, Color.CLEAR);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String toString() {
-        return "[W   ]";
+    protected String toSimpleString() {
+        return "W";
     }
 
     /**
