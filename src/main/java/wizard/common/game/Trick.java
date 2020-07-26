@@ -1,14 +1,17 @@
 package wizard.common.game;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import wizard.common.cards.Card;
+import wizard.common.cards.Cards;
 
-public class Trick {
+/**
+ * {@code Trick} object representing a trick consisting of multiple cards
+ * played by different players.
+ */
+public class Trick extends Cards {
 
     private final Color trump;
-    private final List<Card> cards;
 
     /**
      * Create a new {@code Trick} with the given trump color.
@@ -17,7 +20,6 @@ public class Trick {
      */
     public Trick(final Color trump) {
         this.trump = trump;
-        cards = new ArrayList<Card>();
     }
 
     /**
@@ -28,17 +30,7 @@ public class Trick {
      */
     @Override
     public String toString() {
-        String str = "Trick: ";
-
-        for (int i = 0; i < cards.size(); i++) {
-            str += cards.get(i);
-
-            if (i < cards.size() - 1) {
-                str += " -> ";
-            }
-        }
-
-        return str;
+        return toStringHelper(" -> ");
     }
 
     /**
