@@ -9,6 +9,7 @@ import java.net.Socket;
 import wizard.common.cards.Card;
 import wizard.common.communication.CardMessage;
 import wizard.common.communication.CardsMessage;
+import wizard.common.communication.GameStatusMessage;
 import wizard.common.communication.IntMessage;
 import wizard.common.communication.Message;
 import wizard.common.communication.MessageType;
@@ -97,11 +98,11 @@ public class ServerConnection implements Runnable {
                 receiveGameError(((StringMessage)message));
                 break;
             case GAME_STATUS:
-                if (!(message instanceof StringMessage)) {
+                if (!(message instanceof GameStatusMessage)) {
                     System.err.println("Received message object from client is instance of unexpected class");
                     break;
                 }
-                receiveGameStatus(((StringMessage)message));
+                receiveGameStatus(((GameStatusMessage)message));
                 break;
             case UPDATE_HAND:
                 if (!(message instanceof CardsMessage)) {
@@ -151,7 +152,7 @@ public class ServerConnection implements Runnable {
      *
      * @param message The message which was received
      */
-    private void receiveGameStatus(final StringMessage message) {
+    private void receiveGameStatus(final GameStatusMessage message) {
         player.updateGameStatus(message.getContent());
     }
 

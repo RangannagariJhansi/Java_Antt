@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wizard.common.cards.Card;
+import wizard.common.communication.GameStatus;
 import wizard.common.game.Color;
 import wizard.common.game.Deck;
 import wizard.common.game.Trick;
@@ -73,22 +74,26 @@ public class Round {
         //Ask players for their predictions
         int predictionSum = 0;
 
-        // Ask the first player for prediction
-        predictionSum += currentPlayer().askPrediction(round);
+        // Ask all players for prediction
+        for (int i = 0; i < players.size(); i++) {
+            currentPlayer().updateGameStatus(GameStatus.WAITING_PREDICTION);
+            players.stream()
+                .unordered()
+                .parallel()
+                .filter(p -> p != currentPlayer())
+                .forEach(p -> p.updateGameStatus(GameStatus.WAITING_PREDICTION_OTHER));
 
-        // Ask all but the last player for prediction
-        for (int i = 0; i < players.size() - 2; i++) {
-            predictionSum += nextPlayer().askPrediction(round);
+            // Predictions must not all come true so prediction of last player
+            // is restricted.
+            // All but the last player may predict any amount of tricks.
+            if (i == players.size() - 1) {
+                currentPlayer().askPrediction(round, round - predictionSum);
+            } else {
+                predictionSum += currentPlayer().askPrediction(round);
+            }
+
+            nextPlayer();
         }
-
-        // Predictions must not all come true so prediction of last player is restricted
-        if (predictionSum <= round) {
-            nextPlayer().askPrediction(round, round - predictionSum);
-        } else {
-            nextPlayer().askPrediction(round);
-        }
-
-        nextPlayer();
 
         System.out.println(status());
 
@@ -96,30 +101,38 @@ public class Round {
         for (int trickId = 0; trickId < round; trickId++) {
             Trick trick = new Trick(trumpColor);
 
-            // Ask all players for their cards
             System.out.println("Asking players for their cards...");
 
-            trick.add(currentPlayer().askTrickCard());
-            System.out.println(trick);
-            players.stream()
-                .unordered()
-                .parallel()
-                .forEach(p -> p.updateTrick(trick.getCards().toArray(new Card[trick.getCards().size()])));
-
-            for (int i = 0; i < players.size() - 1; i++) {
-                trick.add(nextPlayer().askTrickCard());
-                System.out.println(trick);
+            // Ask all players for their cards
+            for (int i = 0; i < players.size(); i++) {
+                // Send updated or empty trick to players
                 players.stream()
                     .unordered()
                     .parallel()
                     .forEach(p -> p.updateTrick(trick.getCards().toArray(new Card[trick.getCards().size()])));
-            }
-            System.out.println();
 
+                currentPlayer().updateGameStatus(GameStatus.WAITING_CARD);
+                players.stream()
+                    .unordered()
+                    .parallel()
+                    .filter(p -> p != currentPlayer())
+                    .forEach(p -> p.updateGameStatus(GameStatus.WAITING_CARD_OTHER));
+                trick.add(currentPlayer().askTrickCard());
+
+                System.out.println(trick);
+
+                // Send updated trick to players
+                players.stream()
+                    .unordered()
+                    .parallel()
+                    .forEach(p -> p.updateTrick(trick.getCards().toArray(new Card[trick.getCards().size()])));
+
+                nextPlayer();
+            }
 
             // Determine who took the trick
             Card winnerCard = trick.takenBy();
-            int winnerId = (currentPlayer + 1 + trick.cardId(winnerCard)) % players.size();
+            int winnerId = (currentPlayer + trick.cardId(winnerCard)) % players.size();
             Player winner = players.get(winnerId);
 
             System.out.printf("Trick gets taken by card %s by %s\n", winnerCard, winner.getName());
@@ -130,7 +143,11 @@ public class Round {
             currentPlayer = winnerId;
         }
 
-
+        // Send empty trick to players to indicate trick has been taken
+        players.stream()
+            .unordered()
+            .parallel()
+            .forEach(p -> p.updateTrick(new Card[0]));
 
 
 

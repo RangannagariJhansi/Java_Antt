@@ -5,6 +5,7 @@ import java.util.List;
 
 import wizard.common.cards.Card;
 import wizard.common.cards.Cards;
+import wizard.common.communication.GameStatus;
 import wizard.common.game.Color;
 import wizard.common.game.Trick;
 
@@ -84,6 +85,10 @@ public class Player {
 
     public void updateTrick(final Card[] trick) {
         connection.updateTrick(trick);
+    }
+
+    public void updateGameStatus(final GameStatus gameStatus) {
+        connection.updateGameStatus(gameStatus);
     }
 
     /**

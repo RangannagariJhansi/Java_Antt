@@ -12,6 +12,8 @@ import wizard.common.Settings;
 import wizard.common.cards.Card;
 import wizard.common.communication.CardMessage;
 import wizard.common.communication.CardsMessage;
+import wizard.common.communication.GameStatus;
+import wizard.common.communication.GameStatusMessage;
 import wizard.common.communication.IntMessage;
 import wizard.common.communication.Message;
 import wizard.common.communication.MessageType;
@@ -195,6 +197,21 @@ public class PlayerConnection extends Thread {
     }
 
     /**
+     * Send game-status-message to connected client.
+     *
+     * @param type The type of message to send
+     * @param content The game-status content of the message to send
+     * @throws IOException If sending to server fails
+     */
+    private void send(final MessageType type, final GameStatus content) throws IOException {
+        if (content == null) {
+            send(new VoidMessage(type));
+        } else {
+            send(new GameStatusMessage(type, content));
+        }
+    }
+
+    /**
      * Send game error to connected client.
      *
      * @param message The game error message to send
@@ -235,6 +252,19 @@ public class PlayerConnection extends Thread {
             send(MessageType.UPDATE_TRICK, trick);
         } catch (IOException e) {
             System.err.printf("IOException - Could not send updated trick to player '%s'!\n", this);
+            e.printStackTrace();
+        }
+    }
+
+    public void updateGameStatus(final GameStatus gameStatus) {
+        if (Settings.DEBUG_NETWORK_COMMUNICATION) {
+            System.out.printf("Sending new game status zu player '%s'...\n", this);
+        }
+
+        try {
+            send(MessageType.GAME_STATUS, gameStatus);
+        } catch (IOException e) {
+            System.err.printf("IOException - Could not send game status zu player '%s'!\n", this);
             e.printStackTrace();
         }
     }

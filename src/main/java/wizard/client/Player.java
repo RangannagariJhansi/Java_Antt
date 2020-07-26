@@ -4,25 +4,46 @@ import java.util.Scanner;
 
 import wizard.common.cards.Card;
 import wizard.common.cards.Cards;
+import wizard.common.communication.GameStatus;
 
 public class Player {
 
     private Card[] hand;
     private Card[] trick;
+    private GameStatus gameStatus;
+    private String gameError;
 
     /**
      * Create new @{code Player} with empty hand.
      */
     public Player() {
         hand = null;
+        trick = null;
+        gameStatus = null;
+        gameError = null;
     }
 
-    public void updateGameStatus(final String status) {
-        System.out.printf("Game status: %s\n", status);
+    private void printStatus() {
+        // Clear the screen
+        for (int i = 0; i < 10; i++) {
+            System.out.print("\n\n\n\n\n\n\n\n\n\n");
+        }
+
+        // TODO: Print trump color
+        System.out.printf("Hand:   %s\n", Cards.toString(hand));
+        System.out.printf("Trick:  %s\n", Cards.toString(trick));
+        System.out.printf("Status: %s\n", gameStatus);
+        System.out.println();
+        if (gameError != null) {
+            System.out.printf("Game error: %s\n", gameError);
+            System.out.println();
+            gameError = null;
+        }
     }
 
-    public void showGameError(final String error) {
-        System.out.printf("Game error: %s\n", error);
+    public void updateGameStatus(final GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
+        printStatus();
     }
 
     /**
@@ -33,8 +54,7 @@ public class Player {
      */
     public void updateHand(final Card[] hand) {
         this.hand = hand;
-
-        System.out.printf("Hand: %s\n", Cards.toString(hand));
+        printStatus();
     }
 
     /**
@@ -45,8 +65,12 @@ public class Player {
      */
     public void updateTrick(final Card[] trick) {
         this.trick = trick;
+        printStatus();
+    }
 
-        System.out.printf("Trick: %s\n", Cards.toString(trick));
+    public void showGameError(final String error) {
+        this.gameError = error;
+        printStatus();
     }
 
     /**
@@ -57,8 +81,6 @@ public class Player {
      * @return The number of tricks the player predicted.
      */
     public int askPrediction() {
-        // TODO: Say trump color
-        System.out.printf("Hand: %s\n", Cards.toString(hand));
         System.out.print("What is your prediction? ");
 
         int input = -1;
