@@ -4,6 +4,7 @@ public enum MessageType {
     GAME_ERROR         ("<GAME_ERROR>"),
     GAME_STATUS        ("<GAME_STATUS>"),
     UPDATE_HAND        ("<UPDATE_HAND>"),
+    UPDATE_TRICK       ("<UPDATE_TRICK>"),
     ASK_PREDICTION     ("<ASK_PREDICTION>"),
     ASK_TRICK_CARD     ("<ASK_TRICK_CARD>"),
 

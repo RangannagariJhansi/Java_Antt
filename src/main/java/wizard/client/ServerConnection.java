@@ -110,6 +110,13 @@ public class ServerConnection implements Runnable {
                 }
                 receiveUpdateHand((CardsMessage)message);
                 break;
+            case UPDATE_TRICK:
+                if (!(message instanceof CardsMessage)) {
+                    System.err.println("Received message object from client is instance of unexpected class");
+                    break;
+                }
+                receiveUpdateTrick((CardsMessage)message);
+                break;
             case ASK_PREDICTION:
                 if (!(message instanceof VoidMessage)) {
                     System.err.println("Received message object from client is instance of unexpected class");
@@ -155,6 +162,15 @@ public class ServerConnection implements Runnable {
      */
     private void receiveUpdateHand(final CardsMessage message) {
         player.updateHand(message.getContent());
+    }
+
+    /**
+     * Handle received update-trick message.
+     *
+     * @param message The message which was received
+     */
+    private void receiveUpdateTrick(final CardsMessage message) {
+        player.updateTrick(message.getContent());
     }
 
     /**

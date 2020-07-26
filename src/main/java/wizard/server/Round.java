@@ -98,11 +98,21 @@ public class Round {
 
             // Ask all players for their cards
             System.out.println("Asking players for their cards...");
+
             trick.add(currentPlayer().askTrickCard());
             System.out.println(trick);
+            players.stream()
+                .unordered()
+                .parallel()
+                .forEach(p -> p.updateTrick(trick.getCards().toArray(new Card[trick.getCards().size()])));
+
             for (int i = 0; i < players.size() - 1; i++) {
                 trick.add(nextPlayer().askTrickCard());
                 System.out.println(trick);
+                players.stream()
+                    .unordered()
+                    .parallel()
+                    .forEach(p -> p.updateTrick(trick.getCards().toArray(new Card[trick.getCards().size()])));
             }
             System.out.println();
 

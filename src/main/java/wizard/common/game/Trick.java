@@ -55,6 +55,10 @@ public class Trick {
         return cards.indexOf(card);
     }
 
+    public List<Card> getCards() {
+        return cards;
+    }
+
     /**
      * Returns the first color of this trick.
      *

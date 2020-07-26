@@ -226,6 +226,19 @@ public class PlayerConnection extends Thread {
         }
     }
 
+    public void updateTrick(final Card[] trick) {
+        if (Settings.DEBUG_NETWORK_COMMUNICATION) {
+            System.out.printf("Sending updated trick to player '%s'...\n", this);
+        }
+
+        try {
+            send(MessageType.UPDATE_TRICK, trick);
+        } catch (IOException e) {
+            System.err.printf("IOException - Could not send updated trick to player '%s'!\n", this);
+            e.printStackTrace();
+        }
+    }
+
     public int askPrediction(int upperBorder, int notAllowed) {
         if (Settings.DEBUG_NETWORK_COMMUNICATION) {
             System.out.printf("Asking client '%s' for prediction...\n", this);

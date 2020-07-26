@@ -8,6 +8,7 @@ import wizard.common.cards.Cards;
 public class Player {
 
     private Card[] hand;
+    private Card[] trick;
 
     /**
      * Create new @{code Player} with empty hand.
@@ -34,6 +35,18 @@ public class Player {
         this.hand = hand;
 
         System.out.printf("Hand: %s\n", Cards.toString(hand));
+    }
+
+    /**
+     * Update the currently active trick.
+     * The old trick will be completely replaced.
+     *
+     * @param trick The new trick or updated trick
+     */
+    public void updateTrick(final Card[] trick) {
+        this.trick = trick;
+
+        System.out.printf("Trick: %s\n", Cards.toString(trick));
     }
 
     /**

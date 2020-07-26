@@ -82,6 +82,10 @@ public class Player {
         connection.updateHand(hand.toArray(new Card[hand.size()]));
     }
 
+    public void updateTrick(final Card[] trick) {
+        connection.updateTrick(trick);
+    }
+
     /**
      * Checks whether this player has a given card on his hand.
      *
