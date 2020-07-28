@@ -2,6 +2,7 @@ package wizard.common.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import wizard.common.cards.Card;
 import wizard.common.cards.Cards;
@@ -27,6 +28,7 @@ public class Hand extends Cards {
      */
     public Hand(final List<Card> cards) {
         this.cards = cards;
+        sort();
     }
 
     /**
@@ -43,6 +45,32 @@ public class Hand extends Cards {
     @Override
     public List<Card> asList() {
         return cards;
+    }
+
+    /**
+     * Sort hand cards by color and then by value.
+     */
+    private void sort() {
+        // Sort cards by color
+        BiFunction<Card, Card, Integer> colorComparison = (x, y) -> {
+            return x.getColor().compareTo(y.getColor());
+        };
+
+        // Sort cards by value
+        BiFunction<Card, Card, Integer> valueComparison = (x, y) -> {
+            return x.getValue() - y.getValue();
+        };
+
+        // Sort first by color, then by value
+        cards.sort((a, b) -> {
+            int v = colorComparison.apply(a, b);
+
+            if (v != 0) {
+                return v;
+            }
+
+            return valueComparison.apply(a, b);
+        });
     }
 
     /**
