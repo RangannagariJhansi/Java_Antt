@@ -20,7 +20,7 @@ public class Player {
     public Player() {
         hand = new Hand();
         trick = new Trick();
-        gameStatus = null;
+        gameStatus = GameStatus.UNKNOWN;
         gameError = null;
     }
 

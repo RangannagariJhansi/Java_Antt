@@ -6,7 +6,8 @@ public enum GameStatus {
     WAITING_PREDICTION_OTHER,
     WAITING_PREDICTION,
     WAITING_CARD_OTHER,
-    WAITING_CARD;
+    WAITING_CARD,
+    UNKNOWN;
 
     /**
      * Creates a new {@code GameStatus} enum.
@@ -35,6 +36,7 @@ public enum GameStatus {
                 return "Waiting for other player play a card";
             case WAITING_CARD:
                 return "Waiting for you to play a card";
+            case UNKNOWN:
             default:
                 return "Unknown";
         }
