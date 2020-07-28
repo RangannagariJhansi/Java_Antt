@@ -22,6 +22,15 @@ public class Trick extends Cards {
     }
 
     /**
+     * Create a new {@code Trick} containing the given cards.
+     *
+     * @param cards The cards making up this {@code Trick}
+     */
+    public Trick(final List<Card> cards) {
+        this.cards = cards;
+    }
+
+    /**
      * Returns a string representation of this trick.
      * String will fit on one line and will not end with newline character.
      *

@@ -1,17 +1,16 @@
 package wizard.client;
 
-import java.util.List;
 import java.util.Scanner;
 
 import wizard.common.cards.Card;
-import wizard.common.cards.Cards;
 import wizard.common.communication.GameStatus;
 import wizard.common.game.Hand;
+import wizard.common.game.Trick;
 
 public class Player {
 
     private Hand hand;
-    private List<Card> trick;
+    private Trick trick;
     private GameStatus gameStatus;
     private String gameError;
 
@@ -20,7 +19,7 @@ public class Player {
      */
     public Player() {
         hand = new Hand();
-        trick = null;
+        trick = new Trick();
         gameStatus = null;
         gameError = null;
     }
@@ -33,7 +32,7 @@ public class Player {
 
         // TODO: Print trump color
         System.out.printf("Hand:   %s\n", hand);
-        System.out.printf("Trick:  %s\n", Cards.toString(trick));
+        System.out.printf("Trick:  %s\n", trick);
         System.out.printf("Status: %s\n", gameStatus);
         System.out.println();
         if (gameError != null) {
@@ -65,7 +64,7 @@ public class Player {
      *
      * @param trick The new trick or updated trick
      */
-    public void updateTrick(final List<Card> trick) {
+    public void updateTrick(final Trick trick) {
         this.trick = trick;
         printStatus();
     }
