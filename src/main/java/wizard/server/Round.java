@@ -100,7 +100,7 @@ public class Round {
 
         // Play trick
         for (int trickId = 0; trickId < round; trickId++) {
-            Trick trick = new Trick(trumpColor);
+            Trick trick = new Trick();
 
             System.out.println("Asking players for their cards...");
 
@@ -132,7 +132,7 @@ public class Round {
             }
 
             // Determine who took the trick
-            Card winnerCard = trick.takenBy();
+            Card winnerCard = trick.takenBy(trumpColor);
             int winnerId = (currentPlayer + trick.cardId(winnerCard)) % players.size();
             Player winner = players.get(winnerId);
 

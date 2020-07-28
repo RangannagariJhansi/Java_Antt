@@ -13,16 +13,12 @@ import wizard.common.cards.Cards;
 public class Trick extends Cards {
 
     private final List<Card> cards;
-    private final Color trump;
 
     /**
-     * Create a new {@code Trick} with the given trump color.
-     *
-     * @param trump The trump color for this trick
+     * Create a new {@code Trick}.
      */
-    public Trick(final Color trump) {
+    public Trick() {
         this.cards = new ArrayList<Card>();
-        this.trump = trump;
     }
 
     /**
@@ -75,9 +71,10 @@ public class Trick extends Cards {
     /**
      * Returns which card takes this trick.
      *
+     * @param trump The trump color for this trick
      * @return The winner card which takes this trick
      */
-    public Card takenBy() {
+    public Card takenBy(Color trump) {
         // Trick without cards cannot be taken by anyone
         if (cards.size() == 0) {
             return null;

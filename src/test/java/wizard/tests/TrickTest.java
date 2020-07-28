@@ -17,13 +17,13 @@ class TrickTest {
     void testTakenBy() {
         // Test if empty trick doesn't crash
         {
-            Trick t = new Trick(Color.RED);
-            assertTrue(t.takenBy() == null);
+            Trick t = new Trick();
+            assertTrue(t.takenBy(Color.RED) == null);
         }
 
         // Test if trick gets taken by wizard
         {
-            Trick t = new Trick(Color.RED);
+            Trick t = new Trick();
             Card[] cards = {
                 new NumberCard(10, Color.BLUE),
                 new NumberCard(13, Color.YELLOW),
@@ -33,12 +33,12 @@ class TrickTest {
             for (Card c : cards) {
                 t.add(c);
             }
-            assertTrue(t.takenBy() == cards[2]);
+            assertTrue(t.takenBy(Color.RED) == cards[2]);
         }
 
         // Test if trick gets taken by highest trump color
         {
-            Trick t = new Trick(Color.BLUE);
+            Trick t = new Trick();
             Card[] cards = {
                 new NumberCard(6, Color.RED),
                 new NumberCard(7, Color.YELLOW),
@@ -53,12 +53,12 @@ class TrickTest {
             for (Card c : cards) {
                 t.add(c);
             }
-            assertTrue(t.takenBy() == cards[7]);
+            assertTrue(t.takenBy(Color.BLUE) == cards[7]);
         }
 
         // Test if trick gets taken by highest correct colored card
         {
-            Trick t = new Trick(Color.BLUE);
+            Trick t = new Trick();
             Card[] cards = {
                 new JesterCard(),
                 new NumberCard(1, Color.RED),
@@ -73,12 +73,12 @@ class TrickTest {
             for (Card c : cards) {
                 t.add(c);
             }
-            assertTrue(t.takenBy() == cards[5]);
+            assertTrue(t.takenBy(Color.BLUE) == cards[5]);
         }
 
         // Test if trick gets taken by last jester if all players play jesters
         {
-            Trick t = new Trick(Color.BLUE);
+            Trick t = new Trick();
             Card[] cards = {
                 new JesterCard(),
                 new JesterCard(),
@@ -88,9 +88,9 @@ class TrickTest {
                 t.add(c);
             }
 
-            assertFalse(t.takenBy() == cards[0]);
-            assertFalse(t.takenBy() == cards[1]);
-            assertTrue(t.takenBy() == cards[2]);
+            assertFalse(t.takenBy(Color.BLUE) == cards[0]);
+            assertFalse(t.takenBy(Color.BLUE) == cards[1]);
+            assertTrue(t.takenBy(Color.BLUE) == cards[2]);
         }
     }
 
