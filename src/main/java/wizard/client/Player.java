@@ -6,10 +6,11 @@ import java.util.Scanner;
 import wizard.common.cards.Card;
 import wizard.common.cards.Cards;
 import wizard.common.communication.GameStatus;
+import wizard.common.game.Hand;
 
 public class Player {
 
-    private List<Card> hand;
+    private Hand hand;
     private List<Card> trick;
     private GameStatus gameStatus;
     private String gameError;
@@ -18,7 +19,7 @@ public class Player {
      * Create new @{code Player} with empty hand.
      */
     public Player() {
-        hand = null;
+        hand = new Hand();
         trick = null;
         gameStatus = null;
         gameError = null;
@@ -31,7 +32,7 @@ public class Player {
         }
 
         // TODO: Print trump color
-        System.out.printf("Hand:   %s\n", Cards.toString(hand));
+        System.out.printf("Hand:   %s\n", hand);
         System.out.printf("Trick:  %s\n", Cards.toString(trick));
         System.out.printf("Status: %s\n", gameStatus);
         System.out.println();
@@ -53,7 +54,7 @@ public class Player {
      *
      * @param hand The new hand to apply to this player
      */
-    public void updateHand(final List<Card> hand) {
+    public void updateHand(final Hand hand) {
         this.hand = hand;
         printStatus();
     }
@@ -109,7 +110,7 @@ public class Player {
      */
     public Card askTrickCard() {
         System.out.println("Select card to play. Cards:");
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < hand.count(); i++) {
             System.out.printf("(%d)  %s\n", i, hand.get(i));
         }
 
@@ -125,7 +126,7 @@ public class Player {
                 continue;
             }
 
-            if (input > hand.size() - 1) {
+            if (input > hand.count() - 1) {
                 System.out.println("Invalid CardID");
                 continue;
             }

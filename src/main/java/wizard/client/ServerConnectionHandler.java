@@ -14,6 +14,7 @@ import wizard.common.communication.Message;
 import wizard.common.communication.MessageType;
 import wizard.common.communication.StringMessage;
 import wizard.common.communication.VoidMessage;
+import wizard.common.game.Hand;
 
 public class ServerConnectionHandler extends ConnectionHandler {
 
@@ -147,7 +148,7 @@ public class ServerConnectionHandler extends ConnectionHandler {
      * @param message The message which was received
      */
     private void receiveUpdateHand(final CardsMessage message) {
-        player.updateHand(Arrays.asList(message.getContent()));
+        player.updateHand(new Hand(Arrays.asList(message.getContent())));
     }
 
     /**

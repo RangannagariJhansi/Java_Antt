@@ -83,6 +83,20 @@ public class Hand extends Cards {
     }
 
     /**
+     * Returns card at a given index.
+     *
+     * @param index The index of the card to return
+     * @return The card at the given index or {@code null} if it does not exist
+     */
+    public Card get(int index) {
+        if (index < 0 || index >= cards.size()) {
+            return null;
+        }
+
+        return cards.get(index);
+    }
+
+    /**
      * Checks if a given {@code Card} is on this hand.
      *
      * @param card The card to check if it is on this hand
