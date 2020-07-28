@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Arrays;
 
 import wizard.common.cards.Card;
+import wizard.common.cards.Cards;
 import wizard.common.communication.CardMessage;
 import wizard.common.communication.CardsMessage;
 import wizard.common.communication.GameStatusMessage;
@@ -162,7 +164,7 @@ public class ServerConnection implements Runnable {
      * @param message The message which was received
      */
     private void receiveUpdateHand(final CardsMessage message) {
-        player.updateHand(message.getContent());
+        player.updateHand(Arrays.asList(message.getContent()));
     }
 
     /**
@@ -171,7 +173,7 @@ public class ServerConnection implements Runnable {
      * @param message The message which was received
      */
     private void receiveUpdateTrick(final CardsMessage message) {
-        player.updateTrick(message.getContent());
+        player.updateTrick(Arrays.asList(message.getContent()));
     }
 
     /**

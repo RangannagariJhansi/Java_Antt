@@ -80,10 +80,10 @@ public class Player {
      */
     public void giveHand(final List<Card> hand) {
         this.hand = hand;
-        connection.updateHand(hand.toArray(new Card[hand.size()]));
+        connection.updateHand(hand);
     }
 
-    public void updateTrick(final Card[] trick) {
+    public void updateTrick(final List<Card> trick) {
         connection.updateTrick(trick);
     }
 
@@ -179,7 +179,7 @@ public class Player {
             selectedCard = connection.askTrickCard();
 
             if (!hasCard(selectedCard)) {
-                connection.updateHand(hand.toArray(new Card[hand.size()]));
+                connection.updateHand(hand);
                 connection.sendGameError(String.format(
                         "You have selected card '%s', which is not on your hand!\n",
                         selectedCard));
@@ -194,7 +194,7 @@ public class Player {
 
         // Remove selected card from hand
         hand.remove(selectedCard);
-        connection.updateHand(hand.toArray(new Card[hand.size()]));
+        connection.updateHand(hand);
 
         return selectedCard;
     }

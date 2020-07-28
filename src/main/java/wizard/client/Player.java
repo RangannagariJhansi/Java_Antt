@@ -1,5 +1,6 @@
 package wizard.client;
 
+import java.util.List;
 import java.util.Scanner;
 
 import wizard.common.cards.Card;
@@ -8,8 +9,8 @@ import wizard.common.communication.GameStatus;
 
 public class Player {
 
-    private Card[] hand;
-    private Card[] trick;
+    private List<Card> hand;
+    private List<Card> trick;
     private GameStatus gameStatus;
     private String gameError;
 
@@ -52,7 +53,7 @@ public class Player {
      *
      * @param hand The new hand to apply to this player
      */
-    public void updateHand(final Card[] hand) {
+    public void updateHand(final List<Card> hand) {
         this.hand = hand;
         printStatus();
     }
@@ -63,7 +64,7 @@ public class Player {
      *
      * @param trick The new trick or updated trick
      */
-    public void updateTrick(final Card[] trick) {
+    public void updateTrick(final List<Card> trick) {
         this.trick = trick;
         printStatus();
     }
@@ -108,8 +109,8 @@ public class Player {
      */
     public Card askTrickCard() {
         System.out.println("Select card to play. Cards:");
-        for (int i = 0; i < hand.length; i++) {
-            System.out.printf("(%d)  %s\n", i, hand[i]);
+        for (int i = 0; i < hand.size(); i++) {
+            System.out.printf("(%d)  %s\n", i, hand.get(i));
         }
 
         int input = -1;
@@ -123,8 +124,8 @@ public class Player {
                 System.out.println("Invalid CardID");
                 continue;
             }
-            
-            if (input > hand.length - 1) {
+
+            if (input > hand.size() - 1) {
                 System.out.println("Invalid CardID");
                 continue;
             }
@@ -134,6 +135,6 @@ public class Player {
             done = true;
         }
 
-        return hand[input];
+        return hand.get(input);
     }
 }

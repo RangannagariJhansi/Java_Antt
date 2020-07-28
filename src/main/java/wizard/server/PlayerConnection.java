@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 
 import wizard.common.Settings;
 import wizard.common.cards.Card;
+import wizard.common.cards.Cards;
 import wizard.common.communication.CardMessage;
 import wizard.common.communication.CardsMessage;
 import wizard.common.communication.GameStatus;
@@ -188,11 +190,11 @@ public class PlayerConnection extends Thread {
      * @param content The cards content of the message to send
      * @throws IOException If sending to server fails
      */
-    private void send(final MessageType type, final Card[] content) throws IOException {
+    private void send(final MessageType type, final List<Card> content) throws IOException {
         if (content == null) {
             send(new VoidMessage(type));
         } else {
-            send(new CardsMessage(type, content));
+            send(new CardsMessage(type, content.toArray(new Card[content.size()])));
         }
     }
 
@@ -230,7 +232,7 @@ public class PlayerConnection extends Thread {
      *
      * @param hand The hand to update the client to
      */
-    public void updateHand(final Card[] hand) {
+    public void updateHand(final List<Card> hand) {
         if (Settings.DEBUG_NETWORK_COMMUNICATION) {
             System.out.printf("Sending updated hand to player '%s'...\n", this);
         }
@@ -243,7 +245,7 @@ public class PlayerConnection extends Thread {
         }
     }
 
-    public void updateTrick(final Card[] trick) {
+    public void updateTrick(final List<Card> trick) {
         if (Settings.DEBUG_NETWORK_COMMUNICATION) {
             System.out.printf("Sending updated trick to player '%s'...\n", this);
         }

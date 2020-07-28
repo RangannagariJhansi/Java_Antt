@@ -109,7 +109,7 @@ public class Round {
                 players.stream()
                     .unordered()
                     .parallel()
-                    .forEach(p -> p.updateTrick(trick.getCards().toArray(new Card[trick.getCards().size()])));
+                    .forEach(p -> p.updateTrick(trick.getCards()));
 
                 currentPlayer().updateGameStatus(GameStatus.WAITING_CARD);
                 players.stream()
@@ -125,7 +125,7 @@ public class Round {
                 players.stream()
                     .unordered()
                     .parallel()
-                    .forEach(p -> p.updateTrick(trick.getCards().toArray(new Card[trick.getCards().size()])));
+                    .forEach(p -> p.updateTrick(trick.getCards()));
 
                 nextPlayer();
             }
@@ -147,7 +147,7 @@ public class Round {
         players.stream()
             .unordered()
             .parallel()
-            .forEach(p -> p.updateTrick(new Card[0]));
+            .forEach(p -> p.updateTrick(new ArrayList<Card>()));
 
 
 
