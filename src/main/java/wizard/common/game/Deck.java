@@ -1,5 +1,7 @@
 package wizard.common.game;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import wizard.common.cards.Card;
@@ -13,10 +15,14 @@ import wizard.common.cards.WizardCard;
  */
 public class Deck extends Cards {
 
+    private final List<Card> cards;
+
     /**
      * Create a new {@code Deck} with all cards.
      */
     public Deck() {
+        cards = new ArrayList<Card>();
+
         // Add normal cards
         for (int i = 1; i < 14; i++) {
             cards.add(new NumberCard(i,  Color.BLUE));
@@ -30,6 +36,14 @@ public class Deck extends Cards {
             cards.add(new WizardCard());
             cards.add(new JesterCard());
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Card> asList() {
+        return cards;
     }
 
     /**

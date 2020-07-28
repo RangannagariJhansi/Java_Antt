@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.Arrays;
 
 import wizard.common.cards.Card;
-import wizard.common.cards.Cards;
 import wizard.common.communication.CardMessage;
 import wizard.common.communication.CardsMessage;
 import wizard.common.communication.GameStatusMessage;

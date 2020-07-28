@@ -1,5 +1,6 @@
 package wizard.common.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import wizard.common.cards.Card;
@@ -11,6 +12,7 @@ import wizard.common.cards.Cards;
  */
 public class Trick extends Cards {
 
+    private final List<Card> cards;
     private final Color trump;
 
     /**
@@ -19,6 +21,7 @@ public class Trick extends Cards {
      * @param trump The trump color for this trick
      */
     public Trick(final Color trump) {
+        this.cards = new ArrayList<Card>();
         this.trump = trump;
     }
 
@@ -34,6 +37,14 @@ public class Trick extends Cards {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Card> asList() {
+        return cards;
+    }
+
+    /**
      * Adds a new card to this trick.
      *
      * @param card The card to add to this trick
@@ -45,10 +56,6 @@ public class Trick extends Cards {
     // TODO: Remove !
     public int cardId(final Card card) {
         return cards.indexOf(card);
-    }
-
-    public List<Card> getCards() {
-        return cards;
     }
 
     /**

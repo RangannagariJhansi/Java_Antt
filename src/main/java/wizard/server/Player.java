@@ -1,19 +1,18 @@
 package wizard.server;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import wizard.common.cards.Card;
-import wizard.common.cards.Cards;
 import wizard.common.communication.GameStatus;
 import wizard.common.game.Color;
+import wizard.common.game.Hand;
 import wizard.common.game.Trick;
 
 public class Player {
     private final String name;
     private final PlayerConnection connection;
 
-    private List<Card> hand;
+    private Hand hand;
     private int tricks;
     private int prediction;
     private int score;
@@ -28,7 +27,7 @@ public class Player {
         this.name = name;
         this.connection = connection;
 
-        hand = new ArrayList<Card>();
+        hand = new Hand();
         prediction = -1;
     }
 
@@ -37,9 +36,9 @@ public class Player {
      */
     @Override
     public String toString() {
-        String handStr = Cards.toString(hand);
+        String handStr = hand.toString();
 
-        if (prediction == -1 && hand.size() == 0) {
+        if (prediction == -1 && hand.count() == 0) {
             return name;
         }
 
@@ -78,7 +77,7 @@ public class Player {
      *
      * @param hand The hand to give to this player
      */
-    public void giveHand(final List<Card> hand) {
+    public void giveHand(final Hand hand) {
         this.hand = hand;
         connection.updateHand(hand);
     }
@@ -108,7 +107,7 @@ public class Player {
      * @return True if the player has at least one card of the given color on his hand.
      */
     public boolean hasColor(final Color color) {
-        return hand.parallelStream().anyMatch(x -> x.getColor() == color);
+        return hand.containsColor(color);
     }
 
     /**

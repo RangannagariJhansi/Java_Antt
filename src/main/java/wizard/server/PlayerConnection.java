@@ -11,7 +11,6 @@ import java.util.List;
 
 import wizard.common.Settings;
 import wizard.common.cards.Card;
-import wizard.common.cards.Cards;
 import wizard.common.communication.CardMessage;
 import wizard.common.communication.CardsMessage;
 import wizard.common.communication.GameStatus;
@@ -21,6 +20,7 @@ import wizard.common.communication.Message;
 import wizard.common.communication.MessageType;
 import wizard.common.communication.StringMessage;
 import wizard.common.communication.VoidMessage;
+import wizard.common.game.Hand;
 
 public class PlayerConnection extends Thread {
 
@@ -232,13 +232,13 @@ public class PlayerConnection extends Thread {
      *
      * @param hand The hand to update the client to
      */
-    public void updateHand(final List<Card> hand) {
+    public void updateHand(final Hand hand) {
         if (Settings.DEBUG_NETWORK_COMMUNICATION) {
             System.out.printf("Sending updated hand to player '%s'...\n", this);
         }
 
         try {
-            send(MessageType.UPDATE_HAND, hand);
+            send(MessageType.UPDATE_HAND, hand.asList());
         } catch (IOException e) {
             System.err.printf("IOException - Could not update hand of player '%s'!\n", this);
             e.printStackTrace();

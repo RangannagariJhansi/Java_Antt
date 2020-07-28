@@ -7,6 +7,7 @@ import wizard.common.cards.Card;
 import wizard.common.communication.GameStatus;
 import wizard.common.game.Color;
 import wizard.common.game.Deck;
+import wizard.common.game.Hand;
 import wizard.common.game.Trick;
 
 public class Round {
@@ -33,7 +34,7 @@ public class Round {
             for (int i = 0; i < round; i++) {
                 hand.add(deck.takeRandom());
             }
-            player.giveHand(hand);
+            player.giveHand(new Hand(hand));
         }
 
         // Determine trump color for this round
@@ -109,7 +110,7 @@ public class Round {
                 players.stream()
                     .unordered()
                     .parallel()
-                    .forEach(p -> p.updateTrick(trick.getCards()));
+                    .forEach(p -> p.updateTrick(trick.asList()));
 
                 currentPlayer().updateGameStatus(GameStatus.WAITING_CARD);
                 players.stream()
@@ -125,7 +126,7 @@ public class Round {
                 players.stream()
                     .unordered()
                     .parallel()
-                    .forEach(p -> p.updateTrick(trick.getCards()));
+                    .forEach(p -> p.updateTrick(trick.asList()));
 
                 nextPlayer();
             }

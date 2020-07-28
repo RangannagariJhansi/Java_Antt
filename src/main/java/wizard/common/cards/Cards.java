@@ -1,6 +1,5 @@
 package wizard.common.cards;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,19 +9,17 @@ import java.util.stream.Collectors;
  */
 public abstract class Cards {
 
-    protected final List<Card> cards;
+    /**
+     * Return these cards as a {@code List<Card>}.
+     *
+     * @return these cards as a {@code List<Card>}
+     */
+    public abstract List<Card> asList();
 
-    public Cards() {
-        this.cards = new ArrayList<Card>();
-    }
-
-    @Override
-    public String toString() {
-        return toStringHelper(null);
-    }
+    public abstract String toString();
 
     protected String toStringHelper(String delimiter) {
-        return Cards.toStringHelper(this.cards, delimiter);
+        return Cards.toStringHelper(asList(), delimiter);
     }
 
     /**
@@ -54,6 +51,10 @@ public abstract class Cards {
                 .collect(Collectors.joining(delimiter));
 
         return "[ " +str +" ]";
+    }
+
+    protected static String toStringHelper(final Cards cards, String delimiter) {
+        return Cards.toStringHelper(cards.asList(), delimiter);
     }
 
 }
