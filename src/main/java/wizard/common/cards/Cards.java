@@ -16,45 +16,37 @@ public abstract class Cards {
      */
     public abstract List<Card> asList();
 
-    public abstract String toString();
-
-    protected String toStringHelper(String delimiter) {
-        return Cards.toStringHelper(asList(), delimiter);
-    }
-
     /**
-     * Returns a string representation of a list of cards.
+     * Returns a string representation.
      * String will fit on one line and will not end with newline character.
      *
-     * @param cards Cards to return a representation of
      * @return String representation of given cards
      */
-    public static String toString(final List<Card> cards) {
-        return Cards.toStringHelper(cards, null);
-    }
+    public abstract String toString();
 
-    public static String toString(final Cards cards) {
-        return Cards.toStringHelper(cards.asList(), null);
-    }
+    /**
+     * Returns a string representation with given delimiter.
+     * String will fit on one line and will not end with newline character.
+     * Elements of {@code this} will be separated by given delimiter.
+     *
+     * @param delimiter String to put between elements
+     * @return String representation of given cards
+     */
+    protected String toStringHelper(final String delimiter) {
+        String delim = delimiter;
+        if (delim == null) {
+            delim = ", ";
+        }
 
-    protected static String toStringHelper(final List<Card> cards, String delimiter) {
+        List<Card> cards = asList();
         if (cards == null || cards.size() == 0) {
             return "[  ]";
         }
 
-        if (delimiter == null) {
-            delimiter = ", ";
-        }
-
         String str = cards.stream()
                 .map(Card::toString)
-                .collect(Collectors.joining(delimiter));
+                .collect(Collectors.joining(delim));
 
         return "[ " +str +" ]";
     }
-
-    protected static String toStringHelper(final Cards cards, String delimiter) {
-        return Cards.toStringHelper(cards.asList(), delimiter);
-    }
-
 }
