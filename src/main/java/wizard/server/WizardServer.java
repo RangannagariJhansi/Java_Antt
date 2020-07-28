@@ -30,7 +30,7 @@ public class WizardServer implements Runnable {
             while (players.size() != playerCount) {
                 Socket client = server.accept();
                 synchronized(players) {
-                    PlayerConnection con = new PlayerConnection(client);
+                    PlayerConnectionHandler con = new PlayerConnectionHandler(client);
                     con.start();
                     Player player = new Player(playerNames[players.size()], con);
                     players.add(player);

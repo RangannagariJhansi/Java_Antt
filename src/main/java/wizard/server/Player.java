@@ -10,7 +10,7 @@ import wizard.common.game.Trick;
 
 public class Player {
     private final String name;
-    private final PlayerConnection connection;
+    private final PlayerConnectionHandler connection;
 
     private Hand hand;
     private int tricks;
@@ -23,7 +23,7 @@ public class Player {
      * @param name The name of this player
      * @param connection The connection object for this player
      */
-    public Player(final String name, final PlayerConnection connection) {
+    public Player(final String name, final PlayerConnectionHandler connection) {
         this.name = name;
         this.connection = connection;
 

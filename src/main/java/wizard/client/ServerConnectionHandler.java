@@ -3,47 +3,31 @@ package wizard.client;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 
 import wizard.common.cards.Card;
-import wizard.common.communication.CardMessage;
 import wizard.common.communication.CardsMessage;
+import wizard.common.communication.ConnectionHandler;
 import wizard.common.communication.GameStatusMessage;
-import wizard.common.communication.IntMessage;
 import wizard.common.communication.Message;
 import wizard.common.communication.MessageType;
 import wizard.common.communication.StringMessage;
 import wizard.common.communication.VoidMessage;
 
-public class ServerConnection implements Runnable {
-
-    private static final int PORT = 2000;
-
-    private Socket socket;
-    private ObjectOutputStream out;
+public class ServerConnectionHandler extends ConnectionHandler {
 
     private final Player player;
 
     /**
-     * Create new {@code ServerConnection} object.
+     * Create new {@code ServerConnectionHandler} object with given connection.
+     *
+     * @param socket Socket handling the connection to the server
      */
-    public ServerConnection() {
-        player = new Player();
+    public ServerConnectionHandler(final Socket socket) {
+        super(socket);
 
-        // Connect to server
-        try {
-            socket = new Socket("localhost", PORT);
-            out = new ObjectOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            try {
-                socket.close();
-                out.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
+        this.player = new Player();
     }
 
     /**
@@ -192,50 +176,6 @@ public class ServerConnection implements Runnable {
     }
 
     /**
-     * Send message to connected server.
-     *
-     * @param message The message to send
-     * @throws IOException If sending to server fails
-     */
-    private void send(final Message message) throws IOException {
-        out.writeObject(message);
-        out.flush();
-        out.reset();
-    }
-
-    /**
-     * Send card-message to connected server.
-     *
-     * @param type The type of message to send
-     * @param content The card content of the message to send
-     * @throws IOException If sending to server fails
-     */
-    private void send(final MessageType type, final Card content) throws IOException {
-        if (content == null) {
-            System.err.println("Card is null - Sending as VoidMessage instead");
-            send(new VoidMessage(type));
-        } else {
-            send(new CardMessage(type, content));
-        }
-    }
-
-    /**
-     * Send integer-message to connected server.
-     *
-     * @param type The type of message to send
-     * @param content The integer content of the message to send
-     * @throws IOException If sending to server fails
-     */
-    private void send(final MessageType type, final Integer content) throws IOException {
-        if (content == null) {
-            System.err.println("Integer is null - Sending as VoidMessage instead");
-            send(new VoidMessage(type));
-        } else {
-            send(new IntMessage(type, content));
-        }
-    }
-
-    /**
      * Sends a prediction-answer to the connected server.
      *
      * @param prediction The prediction to be sent to the server
@@ -263,3 +203,4 @@ public class ServerConnection implements Runnable {
         }
     }
 }
+
