@@ -8,6 +8,7 @@ import wizard.common.communication.GameStatus;
 import wizard.common.game.Color;
 import wizard.common.game.Deck;
 import wizard.common.game.Hand;
+import wizard.common.game.ScoreBoard;
 import wizard.common.game.Trick;
 
 public class Round {
@@ -17,12 +18,14 @@ public class Round {
     private final List<Player> players;
     private final Card trumpCard;
     private final Color trumpColor;
+    private final ScoreBoard scoreBoard;
 
     private int currentPlayer = 0;
 
-    public Round(int round, final List<Player> players) {
+    public Round(int round, final List<Player> players, final ScoreBoard scoreBoard) {
         this.round = round;
         this.players = players;
+        this.scoreBoard = scoreBoard;
 
         System.out.println(this);
 
@@ -59,6 +62,8 @@ public class Round {
             status += "\n";
         }
 
+        status += scoreBoard.toAsciiString();
+
         return status;
     }
 
@@ -88,9 +93,12 @@ public class Round {
             // is restricted.
             // All but the last player may predict any amount of tricks.
             if (i == players.size() - 1) {
-                currentPlayer().askPrediction(round, round - predictionSum);
+                int prediction = currentPlayer().askPrediction(round, round - predictionSum);
+                scoreBoard.setPredictions(currentPlayer(), prediction);
             } else {
-                predictionSum += currentPlayer().askPrediction(round);
+                int prediction = currentPlayer().askPrediction(round);
+                scoreBoard.setPredictions(currentPlayer(), prediction);
+                predictionSum += prediction;
             }
 
             nextPlayer();
@@ -138,7 +146,7 @@ public class Round {
 
             System.out.printf("Trick gets taken by card %s by %s\n", winnerCard, winner.getName());
 
-            winner.giveTrick(trick);
+            scoreBoard.addTrick(winner);
 
             // Player who took the trick gets to start the next trick
             currentPlayer = winnerId;
@@ -154,9 +162,7 @@ public class Round {
 
 
         // End of Round
-        for (Player p : players) {
-            p.predictionsToScore();
-        }
+        scoreBoard.predictionsToScore();
 
         System.out.println("End of round\n");
     }

@@ -6,16 +6,12 @@ import wizard.common.cards.Card;
 import wizard.common.communication.GameStatus;
 import wizard.common.game.Color;
 import wizard.common.game.Hand;
-import wizard.common.game.Trick;
 
 public class Player {
     private final String name;
     private final PlayerConnectionHandler connection;
 
     private Hand hand;
-    private int tricks;
-    private int prediction;
-    private int score;
 
     /**
      * Create a new {@code Player} with given name and connection object.
@@ -28,7 +24,6 @@ public class Player {
         this.connection = connection;
 
         hand = new Hand();
-        prediction = -1;
     }
 
     /**
@@ -36,30 +31,7 @@ public class Player {
      */
     @Override
     public String toString() {
-        String handStr = hand.toString();
-
-        if (prediction == -1 && hand.count() == 0) {
-            return name;
-        }
-
-        if (prediction == -1) {
-            return String.format("%s: %s", name, handStr);
-        }
-
-        return String.format("%s: %s"
-                + " [Predicted: %2d]"
-                + " [Taken: %2d]"
-                + " [Score: %3d]",
-                name, handStr, prediction, tricks, score);
-    }
-
-    /**
-     * Add a trick which has been taken by this player to its trick count.
-     *
-     * @param trick The trick which has been taken by this player
-     */
-    public void giveTrick(final Trick trick) {
-        tricks++;
+        return String.format("%s: %s", name, hand);
     }
 
     /**
@@ -160,7 +132,6 @@ public class Player {
             done = true;
         }
 
-        this.prediction = input;
         return input;
     }
 
@@ -196,31 +167,5 @@ public class Player {
         connection.updateHand(hand);
 
         return selectedCard;
-    }
-
-    /**
-     * Convert tricks and predictions of this player to score.
-     * Call this when round ends.
-     */
-    public void predictionsToScore() {
-        if (tricks == prediction) {
-            // Correct predictions score 20 points
-            // plus 10 points for every taken trick.
-
-            System.out.printf("%s predicted correctly and earned 20 + %2d points\n", name, 10 * tricks);
-
-            score += 20;
-            score += (10 * tricks);
-        } else {
-            // Every wrong prediction awards -10 points.
-
-            System.out.printf("%s made a false prediction and lost %2d points\n", name, 10 * Math.abs(tricks - prediction));
-
-            score -= 10 * Math.abs(tricks - prediction);
-        }
-
-        // Rest counters for next round
-        tricks = 0;
-        prediction = -1;
     }
 }

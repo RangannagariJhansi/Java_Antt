@@ -5,17 +5,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import wizard.common.game.ScoreBoard;
+
 public class WizardServer implements Runnable {
 
     private static final int PORT = 2000;
     private static final int playerCount = 2;
     private static final String[] playerNames = {
-        "Player Alfa   ",
-        "Player Bravo  ",
+        "Player Alfa",
+        "Player Bravo",
         "Player Charlie",
-        "Player Delta  " };
+        "Player Delta"
+        };
 
-    private static final ArrayList<Player> players = new ArrayList<Player>();
+    private final ArrayList<Player> players = new ArrayList<Player>();
 
     /**
      * Waits for all clients to connect. Then starts game logic (including
@@ -44,9 +47,14 @@ public class WizardServer implements Runnable {
 
         System.out.println("All players are connected. Starting game...");
 
+        ScoreBoard scoreBoard = new ScoreBoard();
+        for (Player player : players) {
+            scoreBoard.add(player);
+        }
+
         // TODO: dynamically calculate number of rounds
         for (int r = 1; r < 5; r++) {
-            Round round = new Round(r, players);
+            Round round = new Round(r, players, scoreBoard);
             round.play();
         }
 
