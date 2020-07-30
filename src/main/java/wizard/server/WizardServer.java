@@ -4,21 +4,42 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
-import wizard.common.game.ScoreBoard;
-
+/**
+ * {@code WizardServer} object handling the initial connection of players
+ * and then starting the game.
+ */
 public class WizardServer implements Runnable {
 
-    private static final int PORT = 2000;
-    private static final int playerCount = 2;
     private static final String[] playerNames = {
-        "Player Alfa",
-        "Player Bravo",
-        "Player Charlie",
-        "Player Delta"
+        "Alfa",
+        "Bravo",
+        "Charlie",
+        "Delta",
+        "Echo",
+        "Foxtrot",
+        "Golf",
+        "Hotel"
         };
 
-    private final ArrayList<Player> players = new ArrayList<Player>();
+    private final int port;
+    private final int playerCount;
+
+    /**
+     * Create new {@code WizardServer}.
+     *
+     * @param port The network port to listen on for connections
+     * @param playerCount The number of players to wait for connections of
+     */
+    public WizardServer(int port, int playerCount) {
+        this.port = port;
+        this.playerCount = playerCount;
+
+        if (playerCount > 6) {
+            System.err.printf("Having '%d' players is not supported\n", playerCount);
+        }
+    }
 
     /**
      * Waits for all clients to connect. Then starts game logic (including
@@ -26,38 +47,34 @@ public class WizardServer implements Runnable {
      */
     @Override
     public void run() {
-        Thread.currentThread().setName("Game Logic and Sending Thread");
+        Thread.currentThread().setName("Game logic thread");
 
-        try (ServerSocket server = new ServerSocket(PORT)) {
+        // Wait until all players are connected
+        List<Player> players = new ArrayList<Player>(playerCount);
+        try (ServerSocket server = new ServerSocket(port)) {
             System.out.println("Wizard Server running and waiting for connections...");
             while (players.size() != playerCount) {
                 Socket client = server.accept();
                 synchronized(players) {
                     PlayerConnectionHandler con = new PlayerConnectionHandler(client);
                     con.start();
+
                     Player player = new Player(playerNames[players.size()], con);
                     players.add(player);
+
                     System.out.printf("New player connected: %s\n", player);
                 }
             }
         } catch (IOException e) {
             System.err.println("IOException - Error when waiting for clients to connect!");
             e.printStackTrace();
+            return;
         }
 
-        System.out.println("All players are connected. Starting game...");
+        // All players are connected - starting the game
 
-        ScoreBoard scoreBoard = new ScoreBoard();
-        for (Player player : players) {
-            scoreBoard.add(player);
-        }
-
-        // TODO: dynamically calculate number of rounds
-        for (int r = 1; r < 5; r++) {
-            Round round = new Round(r, players, scoreBoard);
-            round.play();
-        }
-
+        Game game = new Game(players);
+        game.play();
         System.out.println("Game Over!");
     }
 
