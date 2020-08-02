@@ -7,24 +7,46 @@ import wizard.common.communication.GameStatus;
 import wizard.common.game.Hand;
 import wizard.common.game.Trick;
 
-public class Player {
+/**
+ * Class handling display of game status information to the user via a
+ * simple command line interface.
+ */
+public class CommandlineView implements UserView {
 
     private Hand hand;
     private Trick trick;
     private GameStatus gameStatus;
     private String gameError;
 
+    private final Scanner stdin;
+
     /**
-     * Create new @{code Player} with empty hand.
+     * Create new {@code CommandlineView} object.
      */
-    public Player() {
-        hand = new Hand();
-        trick = new Trick();
-        gameStatus = GameStatus.UNKNOWN;
+    public CommandlineView() {
+        hand = null;
+        trick = null;
+        gameStatus = null;
         gameError = null;
+
+        stdin = new Scanner(System.in);
     }
 
-    private void printStatus() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void refresh(final Hand hand, final Trick trick,
+            final GameStatus gameStatus, final String gameError) {
+        this.hand = hand;
+        this.trick = trick;
+        this.gameStatus = gameStatus;
+        this.gameError = gameError;
+
+        refresh();
+    }
+
+    private void refresh() {
         // Clear the screen
         for (int i = 0; i < 10; i++) {
             System.out.print("\n\n\n\n\n\n\n\n\n\n");
@@ -42,53 +64,17 @@ public class Player {
         }
     }
 
-    public void updateGameStatus(final GameStatus gameStatus) {
-        this.gameStatus = gameStatus;
-        printStatus();
-    }
-
     /**
-     * Update the hand of the player.
-     * Old hand will be discarded.
-     *
-     * @param hand The new hand to apply to this player
+     * {@inheritDoc}
      */
-    public void updateHand(final Hand hand) {
-        this.hand = hand;
-        printStatus();
-    }
-
-    /**
-     * Update the currently active trick.
-     * The old trick will be completely replaced.
-     *
-     * @param trick The new trick or updated trick
-     */
-    public void updateTrick(final Trick trick) {
-        this.trick = trick;
-        printStatus();
-    }
-
-    public void showGameError(final String error) {
-        this.gameError = error;
-        printStatus();
-    }
-
-    /**
-     * Asks the player for a prediction how many trick he will take this
-     * round.
-     * Will block until the player has chosen a prediction.
-     *
-     * @return The number of tricks the player predicted.
-     */
+    @Override
     public int askPrediction() {
         System.out.print("What is your prediction? ");
 
         int input = -1;
-        Scanner in = new Scanner(System.in);
         boolean done = false;
         while (!done) {
-            input = in.nextInt();
+            input = stdin.nextInt();
 
             if (input < 0) {
                 System.out.println("You cannot take less than 0 tricks!");
@@ -102,11 +88,9 @@ public class Player {
     }
 
     /**
-     * Asks the player for a card to play.
-     * Will block until player has chosen a card.
-     *
-     * @return The card the player wants to play
+     * {@inheritDoc}
      */
+    @Override
     public Card askTrickCard() {
         System.out.println("Select card to play. Cards:");
         for (int i = 0; i < hand.count(); i++) {
@@ -114,11 +98,10 @@ public class Player {
         }
 
         int input = -1;
-        Scanner in = new Scanner(System.in);
         boolean done = false;
         while (!done) {
             System.out.print("CardID: ");
-            input = in.nextInt();
+            input = stdin.nextInt();
 
             if (input < 0) {
                 System.out.println("Invalid CardID");
