@@ -17,17 +17,19 @@ import wizard.common.communication.Message;
 import wizard.common.communication.MessageType;
 import wizard.common.game.Hand;
 
-public class PlayerConnectionHandler extends ConnectionHandler {
-
-    private Object lastAnswerContent = null;
-    private MessageType lastAnswerType = null;
+/**
+ * Class handling receiving of message from client on server side and putting
+ * them into a buffer for consumption.
+ * Also provides methods for sending messages to client.
+ */
+public class ClientConnectionHandler extends ConnectionHandler {
 
     /**
      * Create new {@code PlayerConnectionHandler} object with given connection.
      *
      * @param socket Socket handling the connection to the client
      */
-    public PlayerConnectionHandler(final Socket socket) {
+    public ClientConnectionHandler(final Socket socket) {
         super(socket);
     }
 
@@ -37,16 +39,21 @@ public class PlayerConnectionHandler extends ConnectionHandler {
      */
     @Override
     public void run() {
-        this.setName(String.format("PlayerConnection Thread '%s'", this));
+        this.setName(String.format("Player connection thread '%s'", this));
 
         try (ObjectInputStream in = new ObjectInputStream(
-            new BufferedInputStream(
-                socket.getInputStream()))) {
-
+                new BufferedInputStream(socket.getInputStream()))) {
             while (true) {
+                // Receive object
                 Object object = in.readObject();
+
+                // Check if received object is of type message,
+                // add object to buffer and notify waiting threads
                 if (object instanceof Message) {
-                    receive((Message)object);
+                    bufferPut((Message)object);
+                    synchronized(this) {
+                        notify();
+                    }
                 } else {
                     System.err.println("Received malformed message (wrong object type)");
                 }
@@ -70,46 +77,6 @@ public class PlayerConnectionHandler extends ConnectionHandler {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-        }
-    }
-
-    /**
-     * Handle message received from client.
-     * Decide what type of message is received and call helper functions.
-     *
-     * @param message The message which was received
-     */
-    private void receive(final Message message) {
-        if (Settings.DEBUG_NETWORK_COMMUNICATION) {
-            System.out.println("Received a message");
-        }
-
-        switch (message.getType()) {
-            case ANSWER_PREDICTION:
-                if (!(message instanceof IntMessage)) {
-                    System.err.println("Received message object from client is instance of unexpected class");
-                    break;
-                }
-                synchronized(this) {
-                    lastAnswerType = message.getType();
-                    lastAnswerContent = message.getContent();
-                    notify();
-                }
-                break;
-            case ANSWER_TRICK_CARD:
-                if (!(message instanceof CardMessage)) {
-                    System.err.println("Received message object from client is instance of unexpected class");
-                    break;
-                }
-                synchronized(this) {
-                    lastAnswerType = message.getType();
-                    lastAnswerContent = message.getContent();
-                    notify();
-                }
-                break;
-            default:
-                System.err.println("Received message from client has unknown type");
-                break;
         }
     }
 
@@ -162,6 +129,7 @@ public class PlayerConnectionHandler extends ConnectionHandler {
             System.out.printf("Asking client '%s' for prediction...\n", this);
         }
 
+        // Ask client for prediction
         try {
             send(MessageType.ASK_PREDICTION);
         } catch (IOException e) {
@@ -169,25 +137,40 @@ public class PlayerConnectionHandler extends ConnectionHandler {
             e.printStackTrace();
         }
 
-        synchronized(this) {
-            while (lastAnswerType != MessageType.ANSWER_PREDICTION) {
-                if (Settings.DEBUG_NETWORK_COMMUNICATION) {
-                    System.out.printf("Waiting for answer of client '%s'...\n", this);
+        while (true) {
+            synchronized(this) {
+                // Wait for message from client
+                while (bufferIsEmpty()) {
+                    if (Settings.DEBUG_NETWORK_COMMUNICATION) {
+                        System.out.printf("Waiting for answer of client '%s'...\n", this);
+                    }
+
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        System.err.println("Thread interrupted!");
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
+                    }
                 }
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    System.err.println("Thread interrupted!");
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
+
+                // Check if received message is expected message
+                Message peek = buffer.peek();
+                if (!(peek instanceof IntMessage)
+                        || peek.getType() != MessageType.ANSWER_PREDICTION) {
+
+                    // Received message is unexpected
+                    // -> wake up other thread and go back to sleep
+                    System.err.println("Received message object from client is instance of unexpected class");
+                    notify();
+                } else {
+                    // Received message is expected message
+                    // -> return prediction
+                    IntMessage msg = (IntMessage)buffer.pop();
+                    return msg.getContent();
                 }
             }
         }
-
-        int prediction = (Integer)(lastAnswerContent);
-        lastAnswerContent = null;
-        lastAnswerType = null;
-        return prediction;
     }
 
     /**
@@ -201,6 +184,7 @@ public class PlayerConnectionHandler extends ConnectionHandler {
             System.out.printf("Asking client '%s' for trick card...\n", this);
         }
 
+        // Ask client for card
         try {
             send(MessageType.ASK_TRICK_CARD);
         } catch (IOException e) {
@@ -208,26 +192,40 @@ public class PlayerConnectionHandler extends ConnectionHandler {
             e.printStackTrace();
         }
 
-        synchronized(this) {
-            while (lastAnswerType != MessageType.ANSWER_TRICK_CARD) {
-                if (Settings.DEBUG_NETWORK_COMMUNICATION) {
-                    System.out.printf("Waiting for answer of client '%s'...\n", this);
+        while (true) {
+            synchronized(this) {
+                // Wait for message from client
+                while (bufferIsEmpty()) {
+                    if (Settings.DEBUG_NETWORK_COMMUNICATION) {
+                        System.out.printf("Waiting for answer of client '%s'...\n", this);
+                    }
+
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        System.err.println("Thread interrupted!");
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
+                    }
                 }
 
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    System.err.println("Thread interrupted!");
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
+                // Check if received message is expected message
+                Message peek = buffer.peek();
+                if (!(peek instanceof CardMessage)
+                        || peek.getType() != MessageType.ANSWER_TRICK_CARD) {
+
+                    // Received message is unexpected
+                    // -> wake up other thread and go back to sleep
+                    System.err.println("Received message object from client is instance of unexpected class");
+                    notify();
+                } else {
+                    // Received message is expected message
+                    // -> return prediction
+                    CardMessage msg = (CardMessage)buffer.pop();
+                    return msg.getContent();
                 }
             }
         }
-
-        Card card = (Card)(lastAnswerContent);
-        lastAnswerContent = null;
-        lastAnswerType = null;
-        return card;
     }
 
     /**

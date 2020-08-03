@@ -4,11 +4,20 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayDeque;
 import java.util.List;
 
 import wizard.common.cards.Card;
 
+/**
+ * Abstracting class handling receiving of message and putting them into
+ * a buffer for consumption.
+ * Also provides methods for sending messages to other side of network
+ * connection.
+ */
 public abstract class ConnectionHandler extends Thread {
+
+    protected final ArrayDeque<Message> buffer;
 
     protected final Socket socket;
     protected ObjectOutputStream out;
@@ -19,6 +28,7 @@ public abstract class ConnectionHandler extends Thread {
      * @param socket Socket handling the connection
      */
     public ConnectionHandler(final Socket socket) {
+        this.buffer = new ArrayDeque<Message>(10);
         this.socket = socket;
 
         try {
@@ -45,6 +55,52 @@ public abstract class ConnectionHandler extends Thread {
         str += socket.getPort();
 
         return str;
+    }
+
+    /**
+     * Returns whether the receiving buffer is empty.
+     *
+     * @return True if buffer is empty, false otherwise
+     */
+    public boolean bufferIsEmpty() {
+        synchronized(buffer) {
+            return buffer.isEmpty();
+        }
+    }
+
+    /**
+     * Returns the content of the receiving buffer without removing it from
+     * the buffer.
+     *
+     * @return The content of the buffer
+     */
+    public Message bufferPeek() {
+        synchronized(buffer) {
+            return buffer.peek();
+        }
+    }
+
+    /**
+     * Returns the content of the receiving buffer and removes it from the
+     * buffer.
+     *
+     * @return The content of the buffer
+     */
+    public Message bufferPop() {
+        synchronized(buffer) {
+            return buffer.poll();
+        }
+    }
+
+    /**
+     * Puts content into the receiving buffer.
+     *
+     * @param message The content to put into the buffer
+     */
+    public void bufferPut(final Message message) {
+        synchronized(buffer) {
+            buffer.offer(message);
+        }
     }
 
     /**

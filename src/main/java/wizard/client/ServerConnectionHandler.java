@@ -4,16 +4,18 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.util.ArrayDeque;
 
 import wizard.common.cards.Card;
 import wizard.common.communication.ConnectionHandler;
 import wizard.common.communication.Message;
 import wizard.common.communication.MessageType;
 
+/**
+ * Class handling receiving of message from server on client side and putting
+ * them into a buffer for consumption.
+ * Also provides methods for sending messages to server.
+ */
 public class ServerConnectionHandler extends ConnectionHandler {
-
-    private final ArrayDeque<Message> buffer;
 
     /**
      * Create new {@code ServerConnectionHandler} object with given connection.
@@ -22,8 +24,6 @@ public class ServerConnectionHandler extends ConnectionHandler {
      */
     public ServerConnectionHandler(final Socket socket) {
         super(socket);
-
-        buffer = new ArrayDeque<Message>(10);
     }
 
     /**
@@ -67,24 +67,6 @@ public class ServerConnectionHandler extends ConnectionHandler {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-        }
-    }
-
-    public boolean bufferIsEmpty() {
-        synchronized(buffer) {
-            return buffer.isEmpty();
-        }
-    }
-
-    public Message bufferPop() {
-        synchronized(buffer) {
-            return buffer.poll();
-        }
-    }
-
-    public void bufferPut(final Message message) {
-        synchronized(buffer) {
-            buffer.offer(message);
         }
     }
 

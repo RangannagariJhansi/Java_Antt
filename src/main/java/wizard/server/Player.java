@@ -9,7 +9,7 @@ import wizard.common.game.Hand;
 
 public class Player {
     private final String name;
-    private final PlayerConnectionHandler connection;
+    private final ClientConnectionHandler connection;
 
     private Hand hand;
 
@@ -19,7 +19,7 @@ public class Player {
      * @param name The name of this player
      * @param connection The connection object for this player
      */
-    public Player(final String name, final PlayerConnectionHandler connection) {
+    public Player(final String name, final ClientConnectionHandler connection) {
         this.name = name;
         this.connection = connection;
 
