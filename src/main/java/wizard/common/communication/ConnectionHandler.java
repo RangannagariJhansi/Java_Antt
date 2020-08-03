@@ -15,7 +15,7 @@ import wizard.common.cards.Card;
  * Also provides methods for sending messages to other side of network
  * connection.
  */
-public abstract class ConnectionHandler extends Thread {
+public abstract class ConnectionHandler implements Runnable {
 
     protected final ArrayDeque<Message> buffer;
 

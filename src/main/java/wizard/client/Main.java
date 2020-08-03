@@ -19,7 +19,7 @@ public class Main {
         try {
             Socket socket = new Socket("localhost", PORT);
             ServerConnectionHandler con = new ServerConnectionHandler(socket);
-            con.start();
+            new Thread(con).start();
 
             ClientGame game = new ClientGame(con);
             new Thread(game).start();

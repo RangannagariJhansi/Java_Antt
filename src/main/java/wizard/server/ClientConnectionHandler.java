@@ -39,7 +39,7 @@ public class ClientConnectionHandler extends ConnectionHandler {
      */
     @Override
     public void run() {
-        this.setName(String.format("Player connection thread '%s'", this));
+        Thread.currentThread().setName(String.format("Player connection thread '%s'", this));
 
         try (ObjectInputStream in = new ObjectInputStream(
                 new BufferedInputStream(socket.getInputStream()))) {
