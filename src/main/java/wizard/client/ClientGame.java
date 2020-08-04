@@ -3,12 +3,15 @@ package wizard.client;
 import java.util.Arrays;
 
 import wizard.common.cards.Card;
+import wizard.common.communication.CardMessage;
 import wizard.common.communication.CardsMessage;
+import wizard.common.communication.ColorMessage;
 import wizard.common.communication.GameStatus;
 import wizard.common.communication.GameStatusMessage;
 import wizard.common.communication.Message;
 import wizard.common.communication.StringMessage;
 import wizard.common.communication.VoidMessage;
+import wizard.common.game.Color;
 import wizard.common.game.Hand;
 import wizard.common.game.Trick;
 
@@ -22,6 +25,8 @@ public class ClientGame implements Runnable {
     private final ServerConnectionHandler connection;
 
     private Hand hand;
+    private Card trumpCard;
+    private Color trumpColor;
     private Trick trick;
     private GameStatus gameStatus;
     private String gameError;
@@ -36,6 +41,8 @@ public class ClientGame implements Runnable {
         this.connection = connection;
 
         hand = new Hand();
+        trumpCard = null;
+        trumpColor = null;
         trick = new Trick();
         gameStatus = GameStatus.UNKNOWN;
         gameError = null;
@@ -93,6 +100,20 @@ public class ClientGame implements Runnable {
                 }
                 handleUpdateHandMessage((CardsMessage)message);
                 break;
+            case UPDATE_TRUMP_CARD:
+                if (!(message instanceof CardMessage)) {
+                    System.err.println("Received message object from client is instance of unexpected class");
+                    break;
+                }
+                handleUpdateTrumpCardMessage((CardMessage)message);
+                break;
+            case UPDATE_TRUMP_COLOR:
+                if (!(message instanceof ColorMessage)) {
+                    System.err.println("Received message object from client is instance of unexpected class");
+                    break;
+                }
+                handleUpdateTrumpColorMessage((ColorMessage)message);
+                break;
             case UPDATE_TRICK:
                 if (!(message instanceof CardsMessage)) {
                     System.err.println("Received message object from client is instance of unexpected class");
@@ -148,6 +169,24 @@ public class ClientGame implements Runnable {
     }
 
     /**
+     * Handle received update-trump-card message.
+     *
+     * @param message The message which was received
+     */
+    private void handleUpdateTrumpCardMessage(final CardMessage message) {
+        updateTrumpCard(message.getContent());
+    }
+
+    /**
+     * Handle received update-trump-color message.
+     *
+     * @param message The message which was received
+     */
+    private void handleUpdateTrumpColorMessage(final ColorMessage message) {
+        updateTrumpColor(message.getContent());
+    }
+
+    /**
      * Handle received update-trick message.
      *
      * @param message The message which was received
@@ -176,7 +215,7 @@ public class ClientGame implements Runnable {
      * Refresh the information displayed to the user.
      */
     private void refreshView() {
-        view.refresh(hand, trick, gameStatus, gameError);
+        view.refresh(hand, trumpCard, trumpColor, trick, gameStatus, gameError);
     }
 
     /**
@@ -197,6 +236,26 @@ public class ClientGame implements Runnable {
      */
     private void updateHand(final Hand hand) {
         this.hand = hand;
+        refreshView();
+    }
+
+    /**
+     * Update the current trump card.
+     *
+     * @param trump The new trump card
+     */
+    private void updateTrumpCard(final Card trump) {
+        this.trumpCard = trump;
+        refreshView();
+    }
+
+    /**
+     * Update the current trump color.
+     *
+     * @param trump The new trump color
+     */
+    private void updateTrumpColor(final Color trump) {
+        this.trumpColor = trump;
         refreshView();
     }
 

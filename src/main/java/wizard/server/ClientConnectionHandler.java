@@ -15,6 +15,7 @@ import wizard.common.communication.GameStatus;
 import wizard.common.communication.IntMessage;
 import wizard.common.communication.Message;
 import wizard.common.communication.MessageType;
+import wizard.common.game.Color;
 import wizard.common.game.Hand;
 
 /**
@@ -94,6 +95,36 @@ public class ClientConnectionHandler extends ConnectionHandler {
             send(MessageType.UPDATE_HAND, hand.asList());
         } catch (IOException e) {
             System.err.printf("IOException - Could not update hand of player '%s'!\n", this);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Send update-trump message to connected client.
+     *
+     * @param trumpCard The card indicating the trump color to send to client
+     * @param trumpColor The trump color to send to client
+     */
+    public void updateTrump(final Card trumpCard, final Color trumpColor) {
+        // Send trump card
+        if (Settings.DEBUG_NETWORK_COMMUNICATION) {
+            System.out.printf("Sending updated trump card to player '%s'...\n", this);
+        }
+        try {
+            send(MessageType.UPDATE_TRUMP_CARD, trumpCard);
+        } catch (IOException e) {
+            System.err.printf("IOException - Could not send updated trump card to player '%s'!\n", this);
+            e.printStackTrace();
+        }
+
+        // Send trump color
+        if (Settings.DEBUG_NETWORK_COMMUNICATION) {
+            System.out.printf("Sending updated trump color to player '%s'...\n", this);
+        }
+        try {
+            send(MessageType.UPDATE_TRUMP_COLOR, trumpColor);
+        } catch (IOException e) {
+            System.err.printf("IOException - Could not send updated trump color to player '%s'!\n", this);
             e.printStackTrace();
         }
     }

@@ -2,6 +2,7 @@ package wizard.client;
 
 import wizard.common.cards.Card;
 import wizard.common.communication.GameStatus;
+import wizard.common.game.Color;
 import wizard.common.game.Hand;
 import wizard.common.game.Trick;
 
@@ -15,12 +16,19 @@ public interface UserView {
      * Optionally update game status information.
      *
      * @param hand The current player hand
+     * @param trumpCard The current trump card
+     * @param trumpColor The current trump color
      * @param trick The current trick
      * @param gameStatus The current game status
      * @param gameError If and what error exists
      */
-    public void refresh(final Hand hand, final Trick trick,
-            final GameStatus gameStatus, final String gameError);
+    public void refresh(
+            final Hand hand,
+            final Card trumpCard,
+            final Color trumpColor,
+            final Trick trick,
+            final GameStatus gameStatus,
+            final String gameError);
 
     /**
      * Asks the player for a prediction how many trick he will take this

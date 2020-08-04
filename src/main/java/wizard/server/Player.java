@@ -54,6 +54,16 @@ public class Player {
         connection.updateHand(hand);
     }
 
+    /**
+     * Send current trump color (and corresponding card) to player.
+     *
+     * @param trumpCard The card dictating the current trump color
+     * @param trumpColor The current trump color
+     */
+    public void updateTrump(final Card trumpCard, final Color trumpColor) {
+        connection.updateTrump(trumpCard, trumpColor);
+    }
+
     public void updateTrick(final List<Card> trick) {
         connection.updateTrick(trick);
     }

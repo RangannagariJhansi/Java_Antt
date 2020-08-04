@@ -8,6 +8,7 @@ import java.util.ArrayDeque;
 import java.util.List;
 
 import wizard.common.cards.Card;
+import wizard.common.game.Color;
 
 /**
  * Abstracting class handling receiving of message and putting them into
@@ -167,6 +168,21 @@ public abstract class ConnectionHandler implements Runnable {
             send(new VoidMessage(type));
         } else {
             send(new GameStatusMessage(type, content));
+        }
+    }
+
+    /**
+     * Send color-message to connection.
+     *
+     * @param type The type of message to send
+     * @param content The color content of the message to send
+     * @throws IOException If sending to connection fails
+     */
+    protected void send(final MessageType type, final Color content) throws IOException {
+        if (content == null) {
+            send(new VoidMessage(type));
+        } else {
+            send(new ColorMessage(type, content));
         }
     }
 

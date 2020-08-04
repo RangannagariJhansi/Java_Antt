@@ -153,6 +153,11 @@ public class Game {
 
         // TODO: If card is a jester there is no trump color
         // TODO: If card is a wizard player has to choose a color
+
+        // Send trump color to all players
+        for (Player p : players) {
+            p.updateTrump(trumpCard, trumpColor);
+        }
     }
 
     /**

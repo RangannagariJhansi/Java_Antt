@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import wizard.common.cards.Card;
 import wizard.common.communication.GameStatus;
+import wizard.common.game.Color;
 import wizard.common.game.Hand;
 import wizard.common.game.Trick;
 
@@ -14,6 +15,8 @@ import wizard.common.game.Trick;
 public class CommandlineView implements UserView {
 
     private Hand hand;
+    private Card trumpCard;
+    private Color trumpColor;
     private Trick trick;
     private GameStatus gameStatus;
     private String gameError;
@@ -25,6 +28,8 @@ public class CommandlineView implements UserView {
      */
     public CommandlineView() {
         hand = null;
+        trumpCard = null;
+        trumpColor = null;
         trick = null;
         gameStatus = null;
         gameError = null;
@@ -36,9 +41,17 @@ public class CommandlineView implements UserView {
      * {@inheritDoc}
      */
     @Override
-    public void refresh(final Hand hand, final Trick trick,
-            final GameStatus gameStatus, final String gameError) {
+    public void refresh(
+            final Hand hand,
+            final Card trumpCard,
+            final Color trumpColor,
+            final Trick trick,
+            final GameStatus gameStatus,
+            final String gameError) {
+
         this.hand = hand;
+        this.trumpCard = trumpCard;
+        this.trumpColor = trumpColor;
         this.trick = trick;
         this.gameStatus = gameStatus;
         this.gameError = gameError;
@@ -52,11 +65,33 @@ public class CommandlineView implements UserView {
             System.out.print("\n\n\n\n\n\n\n\n\n\n");
         }
 
-        // TODO: Print trump color
+        // Print hand
         System.out.printf("Hand:   %s\n", hand);
+
+        // Print trump card (+ trump color if not obvious)
+        if (trumpCard != null && trumpColor != null) {
+            if (trumpCard.getColor() == Color.CLEAR) {
+                if (trumpCard.isWizard()) {
+                    // Trump card is a wizard so trump color has been chosen by player
+                    System.out.printf("Trump: %s (%s)\n", trumpCard, trumpColor);
+                } else {
+                    // Trump card is a jester so there is no trump color
+                    System.out.printf("Trump: %s (no color)\n", trumpCard);
+                }
+
+            } else {
+                System.out.printf("Trump: %s\n", trumpCard);
+            }
+        }
+
+        // Print trick
         System.out.printf("Trick:  %s\n", trick);
+
+        // Print status
         System.out.printf("Status: %s\n", gameStatus);
         System.out.println();
+
+        // Print error only one time if error is set
         if (gameError != null) {
             System.out.printf("Game error: %s\n", gameError);
             System.out.println();
