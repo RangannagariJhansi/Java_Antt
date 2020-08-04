@@ -1,4 +1,4 @@
-package wizard.common.communication;
+package wizard.common;
 
 public enum GameStatus {
     WAITING_TRUMP_DECISION_OTHER,

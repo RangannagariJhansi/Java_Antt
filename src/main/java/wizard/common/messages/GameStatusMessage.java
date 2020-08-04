@@ -1,6 +1,8 @@
-package wizard.common.communication;
+package wizard.common.messages;
 
-public class IntMessage extends Message {
+import wizard.common.GameStatus;
+
+public class GameStatusMessage extends Message {
 
     private static final long serialVersionUID = 1L;
 
@@ -10,7 +12,7 @@ public class IntMessage extends Message {
      * @param type The type of this new message
      * @param content The content of this new message
      */
-    public IntMessage(final MessageType type, int content) {
+    public GameStatusMessage(final MessageType type, GameStatus content) {
         super(type, content);
     }
 
@@ -18,7 +20,7 @@ public class IntMessage extends Message {
      * {@inheritDoc}
      */
     @Override
-    public Integer getContent() {
-        return (Integer)super.getContent();
+    public GameStatus getContent() {
+        return (GameStatus)super.getContent();
     }
 }

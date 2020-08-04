@@ -1,4 +1,4 @@
-package wizard.common.communication;
+package wizard.common;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -9,6 +9,15 @@ import java.util.List;
 
 import wizard.common.cards.Card;
 import wizard.common.game.Color;
+import wizard.common.messages.CardMessage;
+import wizard.common.messages.CardsMessage;
+import wizard.common.messages.ColorMessage;
+import wizard.common.messages.GameStatusMessage;
+import wizard.common.messages.IntMessage;
+import wizard.common.messages.Message;
+import wizard.common.messages.MessageType;
+import wizard.common.messages.StringMessage;
+import wizard.common.messages.VoidMessage;
 
 /**
  * Abstracting class handling receiving of message and putting them into

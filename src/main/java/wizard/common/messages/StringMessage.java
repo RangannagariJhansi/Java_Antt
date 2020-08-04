@@ -1,4 +1,4 @@
-package wizard.common.communication;
+package wizard.common.messages;
 
 public class StringMessage extends Message {
 

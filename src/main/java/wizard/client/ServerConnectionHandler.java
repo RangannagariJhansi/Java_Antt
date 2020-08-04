@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
+import wizard.common.ConnectionHandler;
 import wizard.common.cards.Card;
-import wizard.common.communication.ConnectionHandler;
-import wizard.common.communication.Message;
-import wizard.common.communication.MessageType;
+import wizard.common.messages.Message;
+import wizard.common.messages.MessageType;
 
 /**
  * Class handling receiving of message from server on client side and putting

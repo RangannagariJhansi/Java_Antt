@@ -1,4 +1,4 @@
-package wizard.common.communication;
+package wizard.common.messages;
 
 public enum MessageType {
     GAME_ERROR         ("<GAME_ERROR>"),

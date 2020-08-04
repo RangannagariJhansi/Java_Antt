@@ -3,11 +3,11 @@ package wizard.tests;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
-import wizard.common.communication.IntMessage;
-import wizard.common.communication.Message;
-import wizard.common.communication.MessageType;
-import wizard.common.communication.StringMessage;
-import wizard.common.communication.VoidMessage;
+import wizard.common.messages.IntMessage;
+import wizard.common.messages.Message;
+import wizard.common.messages.MessageType;
+import wizard.common.messages.StringMessage;
+import wizard.common.messages.VoidMessage;
 
 class MessageTest {
 

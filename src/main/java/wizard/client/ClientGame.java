@@ -2,18 +2,18 @@ package wizard.client;
 
 import java.util.Arrays;
 
+import wizard.common.GameStatus;
 import wizard.common.cards.Card;
-import wizard.common.communication.CardMessage;
-import wizard.common.communication.CardsMessage;
-import wizard.common.communication.ColorMessage;
-import wizard.common.communication.GameStatus;
-import wizard.common.communication.GameStatusMessage;
-import wizard.common.communication.Message;
-import wizard.common.communication.StringMessage;
-import wizard.common.communication.VoidMessage;
 import wizard.common.game.Color;
 import wizard.common.game.Hand;
 import wizard.common.game.Trick;
+import wizard.common.messages.CardMessage;
+import wizard.common.messages.CardsMessage;
+import wizard.common.messages.ColorMessage;
+import wizard.common.messages.GameStatusMessage;
+import wizard.common.messages.Message;
+import wizard.common.messages.StringMessage;
+import wizard.common.messages.VoidMessage;
 
 /**
  * Class handling the game flow on the client side.

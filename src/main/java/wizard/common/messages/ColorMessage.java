@@ -1,4 +1,4 @@
-package wizard.common.communication;
+package wizard.common.messages;
 
 import wizard.common.game.Color;
 

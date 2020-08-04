@@ -7,16 +7,16 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.List;
 
+import wizard.common.ConnectionHandler;
+import wizard.common.GameStatus;
 import wizard.common.Settings;
 import wizard.common.cards.Card;
-import wizard.common.communication.CardMessage;
-import wizard.common.communication.ConnectionHandler;
-import wizard.common.communication.GameStatus;
-import wizard.common.communication.IntMessage;
-import wizard.common.communication.Message;
-import wizard.common.communication.MessageType;
 import wizard.common.game.Color;
 import wizard.common.game.Hand;
+import wizard.common.messages.CardMessage;
+import wizard.common.messages.IntMessage;
+import wizard.common.messages.Message;
+import wizard.common.messages.MessageType;
 
 /**
  * Class handling receiving of message from client on server side and putting

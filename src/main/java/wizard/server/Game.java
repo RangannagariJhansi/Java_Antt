@@ -3,8 +3,8 @@ package wizard.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import wizard.common.GameStatus;
 import wizard.common.cards.Card;
-import wizard.common.communication.GameStatus;
 import wizard.common.game.Color;
 import wizard.common.game.Deck;
 import wizard.common.game.Hand;
