@@ -18,23 +18,13 @@ public class ScoreBoard {
         public int score = 0;
     }
 
-    private Map<Player, Triple> map;
+    private Map<String, Triple> map;
 
     /**
      * Creates a new {@code ScoreBoard}.
      */
     public ScoreBoard() {
-        this.map = new HashMap<Player, Triple>();
-    }
-
-    /**
-     * Creates a new {@code ScoreBoard} and adds given players to it.
-     *
-     * @param players The players to add to the newly created {@code Scoreboard}
-     */
-    public ScoreBoard(final List<Player> players) {
-        super();
-        players.stream().forEach(this::add);
+        this.map = new HashMap<String, Triple>();
     }
 
     /**
@@ -47,8 +37,8 @@ public class ScoreBoard {
     public String toString() {
         StringBuilder str = new StringBuilder();
 
-        for (Entry<Player, Triple> entry : map.entrySet()) {
-            Player player = entry.getKey();
+        for (Entry<String, Triple> entry : map.entrySet()) {
+            String player = entry.getKey();
             int prediction = entry.getValue().prediction;
             int tricks = entry.getValue().tricks;
             int score = entry.getValue().score;
@@ -57,7 +47,7 @@ public class ScoreBoard {
                 + " [Predicted: %2d]"
                 + " [Taken: %2d]"
                 + " [Score: %3d]",
-                player.getName(), prediction, tricks, score);
+                player, prediction, tricks, score);
 
             str.append(line);
             str.append('\n');
@@ -94,14 +84,14 @@ public class ScoreBoard {
             return str;
         };
 
-        final List<String> playerNames = new ArrayList<String>(map.size());
+        final List<String> players = new ArrayList<String>(map.size());
         final List<Integer> predictions = new ArrayList<Integer>(map.size());
         final List<String> tricks = new ArrayList<String>(map.size());
         final List<String> scores = new ArrayList<String>(map.size());
 
         // Convert all values to lists of equal size
-        for (Entry<Player, Triple> entry : map.entrySet()) {
-            playerNames.add(" " +entry.getKey().getName() +" ");
+        for (Entry<String, Triple> entry : map.entrySet()) {
+            players.add(" " +entry.getKey() +" ");
             predictions.add(entry.getValue().prediction);
             tricks.add(Integer.toString(entry.getValue().tricks));
             scores.add(Integer.toString(entry.getValue().score));
@@ -110,7 +100,7 @@ public class ScoreBoard {
 
         // Determine width of columns
         final int nameWidth = Stream.concat(
-                playerNames.stream(),
+                players.stream(),
                 Stream.of(playerHeading))
             .unordered()
             .parallel()
@@ -151,9 +141,9 @@ public class ScoreBoard {
         ascii.append('\n');
 
         // Data lines
-        for (int i = 0; i < playerNames.size(); i++) {
+        for (int i = 0; i < players.size(); i++) {
             ascii.append('|');
-            ascii.append(stringPad.apply(playerNames.get(i), nameWidth));
+            ascii.append(stringPad.apply(players.get(i), nameWidth));
 
             ascii.append('|');
             {
@@ -191,6 +181,15 @@ public class ScoreBoard {
      * @param player The player to add
      */
     public void add(final Player player) {
+        add(player.getName());
+    }
+
+    /**
+     * Adds a given player.
+     *
+     * @param player The player to add
+     */
+    public void add(final String player) {
         if (!map.containsKey(player)) {
             map.put(player, new Triple());
         }
@@ -203,6 +202,16 @@ public class ScoreBoard {
      * @param prediction The prediction to set
      */
     public void setPredictions(final Player player, int prediction) {
+        setPredictions(player.getName(), prediction);
+    }
+
+    /**
+     * Sets the current prediction of a given player.
+     *
+     * @param player The player to set the current prediction of
+     * @param prediction The prediction to set
+     */
+    public void setPredictions(final String player, int prediction) {
         Triple triple = map.get(player);
         if (triple == null) {
             add(player);
@@ -217,6 +226,16 @@ public class ScoreBoard {
      * @param tricks The number of tricks to set
      */
     public void setTricks(final Player player, int tricks) {
+        setTricks(player.getName(), tricks);
+    }
+
+    /**
+     * Sets the current number of taken tricks of a given player.
+     *
+     * @param player The player to set the current number of tricks of
+     * @param tricks The number of tricks to set
+     */
+    public void setTricks(final String player, int tricks) {
         Triple triple = map.get(player);
         if (triple == null) {
             add(player);
@@ -231,6 +250,16 @@ public class ScoreBoard {
      * @param score The score to set
      */
     public void setScore(final Player player, int score) {
+        setScore(player.getName(), score);
+    }
+
+    /**
+     * Sets the current score of a given player.
+     *
+     * @param player The player to set the current score of
+     * @param score The score to set
+     */
+    public void setScore(final String player, int score) {
         Triple triple = map.get(player);
         if (triple == null) {
             add(player);
@@ -244,6 +273,15 @@ public class ScoreBoard {
      * @param player The player to increase the number of taken tricks of
      */
     public void addTrick(final Player player) {
+        addTrick(player.getName());
+    }
+
+    /**
+     * Increases the current number of taken tricks of a given player by one.
+     *
+     * @param player The player to increase the number of taken tricks of
+     */
+    public void addTrick(final String player) {
         int tricks = getTricks(player);
         setTricks(player, tricks + 1);
     }
@@ -255,6 +293,16 @@ public class ScoreBoard {
      * @param score The amount of how much to increase the score
      */
     public void addScore(final Player player, int score) {
+        addScore(player.getName(), score);
+    }
+
+    /**
+     * Increases the current score of a given player by a given amount.
+     *
+     * @param player The player of which to increase the score
+     * @param score The amount of how much to increase the score
+     */
+    public void addScore(final String player, int score) {
         int current = getScore(player);
         setScore(player, current + score);
     }
@@ -266,6 +314,16 @@ public class ScoreBoard {
      * @return The current prediction of given player
      */
     public int getPrediction(final Player player) {
+        return getPrediction(player.getName());
+    }
+
+    /**
+     * Returns the current prediction of a given player.
+     *
+     * @param player The player to return the current prediction of
+     * @return The current prediction of given player
+     */
+    public int getPrediction(final String player) {
         Triple triple = map.get(player);
         return (triple == null) ? null : triple.prediction;
     }
@@ -277,6 +335,16 @@ public class ScoreBoard {
      * @return The current number of taken tricks of given player
      */
     public int getTricks(final Player player) {
+        return getTricks(player.getName());
+    }
+
+    /**
+     * Returns the current number of taken tricks of a given play)er.
+     *
+     * @param player The player to return the current tricks of
+     * @return The current number of taken tricks of given player
+     */
+    public int getTricks(final String player) {
         Triple triple = map.get(player);
         return (triple == null) ? null : triple.tricks;
     }
@@ -288,6 +356,16 @@ public class ScoreBoard {
      * @return The current score of a given player
      */
     public int getScore(final Player player) {
+        return getScore(player.getName());
+    }
+
+    /**
+     * Returns the current score of a given player.
+     *
+     * @param player The player to return the current score of
+     * @return The current score of a given player
+     */
+    public int getScore(final String player) {
         Triple triple = map.get(player);
         return (triple == null) ? null : triple.score;
     }
@@ -297,8 +375,8 @@ public class ScoreBoard {
      * Call this when round ends.
      */
     public void predictionsToScore() {
-        for (Entry<Player, Triple> entry : map.entrySet()) {
-            Player player = entry.getKey();
+        for (Entry<String, Triple> entry : map.entrySet()) {
+            String player = entry.getKey();
             int prediction = entry.getValue().prediction;
             int tricks = entry.getValue().tricks;
             int score = entry.getValue().score;
@@ -310,7 +388,7 @@ public class ScoreBoard {
                 // plus 10 points for every taken trick.
 
                 System.out.printf("%s predicted correctly and earned 20 + %2d points\n",
-                    player.getName(), 10 * tricks);
+                    player, 10 * tricks);
 
                 achievedScore += 20;
                 achievedScore += (10 * tricks);
@@ -318,7 +396,7 @@ public class ScoreBoard {
                 // Every wrong prediction awards -10 points.
 
                 System.out.printf("%s made a false prediction and lost %2d points\n",
-                    player.getName(), 10 * Math.abs(tricks - prediction));
+                    player, 10 * Math.abs(tricks - prediction));
 
                 achievedScore -= 10 * Math.abs(tricks - prediction);
             }
