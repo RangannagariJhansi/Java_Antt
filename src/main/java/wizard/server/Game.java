@@ -117,6 +117,10 @@ public class Game {
 
         // End of Round
         scoreBoard.predictionsToScore();
+        players.stream()
+            .unordered()
+            .parallel()
+            .forEach(p -> p.updateScores(scoreBoard));
 
         System.out.println("End of round\n");
     }
@@ -168,8 +172,15 @@ public class Game {
     private void askPredictions(int round) {
         int predictionSum = 0;
 
+        // Send unset predictions to all players
+        players.stream()
+            .unordered()
+            .parallel()
+            .forEach(p -> p.updateScores(scoreBoard));
+
         // Ask all players for prediction
         for (int i = 0; i < players.size(); i++) {
+            // Update game status accordingly
             currentPlayer().updateGameStatus(GameStatus.WAITING_PREDICTION);
             players.stream()
                 .unordered()
@@ -188,6 +199,12 @@ public class Game {
                 scoreBoard.setPredictions(currentPlayer(), prediction);
                 predictionSum += prediction;
             }
+
+            // Send updated predictions to all players
+            players.stream()
+                .unordered()
+                .parallel()
+                .forEach(p -> p.updateScores(scoreBoard));
 
             nextPlayer();
         }
@@ -245,10 +262,16 @@ public class Game {
 
         scoreBoard.addTrick(winner);
 
-        // Send empty trick to players to indicate trick has been taken
+        // Update player state
         players.stream()
             .unordered()
             .parallel()
-            .forEach(p -> p.updateTrick(new Trick().asList()));
+            .forEach(p -> {
+                // Send updated scores to indicate who has taken the trick
+                p.updateScores(scoreBoard);
+
+                // Send empty trick to players to indicate trick has been taken
+                p.updateTrick(new Trick().asList());
+            });
     }
 }

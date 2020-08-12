@@ -6,6 +6,7 @@ import wizard.common.GameStatus;
 import wizard.common.cards.Card;
 import wizard.common.game.Color;
 import wizard.common.game.Hand;
+import wizard.common.game.ScoreBoard;
 import wizard.common.game.Trick;
 
 /**
@@ -18,6 +19,7 @@ public class CommandlineView implements UserView {
     private Card trumpCard;
     private Color trumpColor;
     private Trick trick;
+    private ScoreBoard scoreBoard;
     private GameStatus gameStatus;
     private String gameError;
 
@@ -31,6 +33,7 @@ public class CommandlineView implements UserView {
         trumpCard = null;
         trumpColor = null;
         trick = null;
+        scoreBoard = null;
         gameStatus = null;
         gameError = null;
 
@@ -46,6 +49,7 @@ public class CommandlineView implements UserView {
             final Card trumpCard,
             final Color trumpColor,
             final Trick trick,
+            final ScoreBoard scoreBoard,
             final GameStatus gameStatus,
             final String gameError) {
 
@@ -53,6 +57,7 @@ public class CommandlineView implements UserView {
         this.trumpCard = trumpCard;
         this.trumpColor = trumpColor;
         this.trick = trick;
+        this.scoreBoard = scoreBoard;
         this.gameStatus = gameStatus;
         this.gameError = gameError;
 
@@ -63,6 +68,11 @@ public class CommandlineView implements UserView {
         // Clear the screen
         for (int i = 0; i < 10; i++) {
             System.out.print("\n\n\n\n\n\n\n\n\n\n");
+        }
+
+        if (scoreBoard != null) {
+            System.out.print(scoreBoard.toAsciiString());
+            System.out.println();
         }
 
         // Print hand

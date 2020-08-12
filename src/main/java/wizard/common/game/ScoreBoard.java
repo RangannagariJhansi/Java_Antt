@@ -1,5 +1,6 @@
 package wizard.common.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +11,13 @@ import java.util.stream.Stream;
 
 import wizard.server.Player;
 
-public class ScoreBoard {
+public class ScoreBoard implements Serializable {
 
-    private class Triple {
+    private static final long serialVersionUID = 1L;
+
+    private class Triple implements Serializable {
+        private static final long serialVersionUID = 1L;
+
         public int prediction = -1;
         public int tricks = 0;
         public int score = 0;

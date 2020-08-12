@@ -6,6 +6,7 @@ import wizard.common.GameStatus;
 import wizard.common.cards.Card;
 import wizard.common.game.Color;
 import wizard.common.game.Hand;
+import wizard.common.game.ScoreBoard;
 
 public class Player {
     private final String name;
@@ -66,6 +67,15 @@ public class Player {
 
     public void updateTrick(final List<Card> trick) {
         connection.updateTrick(trick);
+    }
+
+    /**
+     * Send current scores to player.
+     *
+     * @param scoreBoard The current scores
+     */
+    public void updateScores(final ScoreBoard scoreBoard) {
+        connection.updateScores(scoreBoard);
     }
 
     public void updateGameStatus(final GameStatus gameStatus) {

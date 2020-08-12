@@ -4,6 +4,7 @@ import wizard.common.GameStatus;
 import wizard.common.cards.Card;
 import wizard.common.game.Color;
 import wizard.common.game.Hand;
+import wizard.common.game.ScoreBoard;
 import wizard.common.game.Trick;
 
 /**
@@ -19,6 +20,7 @@ public interface UserView {
      * @param trumpCard The current trump card
      * @param trumpColor The current trump color
      * @param trick The current trick
+     * @param scoreBoard The current scores
      * @param gameStatus The current game status
      * @param gameError If and what error exists
      */
@@ -27,6 +29,7 @@ public interface UserView {
             final Card trumpCard,
             final Color trumpColor,
             final Trick trick,
+            final ScoreBoard scoreBoard,
             final GameStatus gameStatus,
             final String gameError);
 

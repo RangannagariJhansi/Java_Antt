@@ -9,6 +9,7 @@ import java.util.List;
 
 import wizard.common.cards.Card;
 import wizard.common.game.Color;
+import wizard.common.game.ScoreBoard;
 import wizard.common.messages.CardMessage;
 import wizard.common.messages.CardsMessage;
 import wizard.common.messages.ColorMessage;
@@ -16,6 +17,7 @@ import wizard.common.messages.GameStatusMessage;
 import wizard.common.messages.IntMessage;
 import wizard.common.messages.Message;
 import wizard.common.messages.MessageType;
+import wizard.common.messages.ScoresMessage;
 import wizard.common.messages.StringMessage;
 import wizard.common.messages.VoidMessage;
 
@@ -208,6 +210,22 @@ public abstract class ConnectionHandler implements Runnable {
             send(new VoidMessage(type));
         } else {
             send(new CardMessage(type, content));
+        }
+    }
+
+    /**
+     * Send scores-message to connection.
+     *
+     * @param type The type of the message to send
+     * @param content The scores content of the message to send
+     * @throws IOException If sending to connection fails
+     */
+    protected void send(final MessageType type, final ScoreBoard content) throws IOException {
+        if (content == null) {
+            System.err.println("ScoreBoard is null - Sending as VoidMessage instead");
+            send(new VoidMessage(type));
+        } else {
+            send(new ScoresMessage(type, content));
         }
     }
 

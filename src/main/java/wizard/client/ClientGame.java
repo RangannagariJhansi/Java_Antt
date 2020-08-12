@@ -6,12 +6,14 @@ import wizard.common.GameStatus;
 import wizard.common.cards.Card;
 import wizard.common.game.Color;
 import wizard.common.game.Hand;
+import wizard.common.game.ScoreBoard;
 import wizard.common.game.Trick;
 import wizard.common.messages.CardMessage;
 import wizard.common.messages.CardsMessage;
 import wizard.common.messages.ColorMessage;
 import wizard.common.messages.GameStatusMessage;
 import wizard.common.messages.Message;
+import wizard.common.messages.ScoresMessage;
 import wizard.common.messages.StringMessage;
 import wizard.common.messages.VoidMessage;
 
@@ -28,6 +30,7 @@ public class ClientGame implements Runnable {
     private Card trumpCard;
     private Color trumpColor;
     private Trick trick;
+    private ScoreBoard scoreBoard;
     private GameStatus gameStatus;
     private String gameError;
 
@@ -44,6 +47,7 @@ public class ClientGame implements Runnable {
         trumpCard = null;
         trumpColor = null;
         trick = new Trick();
+        scoreBoard = null;
         gameStatus = GameStatus.UNKNOWN;
         gameError = null;
     }
@@ -121,6 +125,13 @@ public class ClientGame implements Runnable {
                 }
                 handleUpdateTrickMessage((CardsMessage)message);
                 break;
+            case UPDATE_SCORES:
+                if (!(message instanceof ScoresMessage)) {
+                    System.err.println("Received message object from client is instance of unexpected class");
+                    break;
+                }
+                handleUpdateScoresMessage((ScoresMessage)message);
+                break;
             case ASK_PREDICTION:
                 if (!(message instanceof VoidMessage)) {
                     System.err.println("Received message object from client is instance of unexpected class");
@@ -196,6 +207,15 @@ public class ClientGame implements Runnable {
     }
 
     /**
+     * Handle received update-scores message.
+     *
+     * @param message The message which was received
+     */
+    private void handleUpdateScoresMessage(final ScoresMessage message) {
+        updateScores(message.getContent());
+    }
+
+    /**
      * Handle received ask-prediction message.
      */
     private void handleAskPredictionMessage() {
@@ -215,7 +235,7 @@ public class ClientGame implements Runnable {
      * Refresh the information displayed to the user.
      */
     private void refreshView() {
-        view.refresh(hand, trumpCard, trumpColor, trick, gameStatus, gameError);
+        view.refresh(hand, trumpCard, trumpColor, trick, scoreBoard, gameStatus, gameError);
     }
 
     /**
@@ -267,6 +287,16 @@ public class ClientGame implements Runnable {
      */
     private void updateTrick(final Trick trick) {
         this.trick = trick;
+        refreshView();
+    }
+
+    /**
+     * Update the current scores.
+     *
+     * @param scoreBoard The new scores.
+     */
+    private void updateScores(final ScoreBoard scoreBoard) {
+        this.scoreBoard = scoreBoard;
         refreshView();
     }
 

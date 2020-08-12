@@ -13,6 +13,7 @@ import wizard.common.Settings;
 import wizard.common.cards.Card;
 import wizard.common.game.Color;
 import wizard.common.game.Hand;
+import wizard.common.game.ScoreBoard;
 import wizard.common.messages.CardMessage;
 import wizard.common.messages.IntMessage;
 import wizard.common.messages.Message;
@@ -138,6 +139,24 @@ public class ClientConnectionHandler extends ConnectionHandler {
             send(MessageType.UPDATE_TRICK, trick);
         } catch (IOException e) {
             System.err.printf("IOException - Could not send updated trick to player '%s'!\n", this);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Send update-scores message to connected client.
+     *
+     * @param scoreBoard The updated scores to send to client
+     */
+    public void updateScores(final ScoreBoard scoreBoard) {
+        if (Settings.DEBUG_NETWORK_COMMUNICATION) {
+            System.out.printf("Sending updated scores to player '%s'...\n", this);
+        }
+
+        try {
+            send(MessageType.UPDATE_SCORES, scoreBoard);
+        } catch (IOException e) {
+            System.err.printf("IOException - Could not send updated scores to player '%s'!\n", this);
             e.printStackTrace();
         }
     }
