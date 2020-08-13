@@ -3,12 +3,13 @@
   <property name = "src.dir"           location = "src/main/java"/>
   <property name = "test.dir"          location = "src/test/java"/>
   <property name = "build.dir"         location = "build"/>
-  <property name = "build.dist.dir"    location = "${build.dir}"/>
   <property name = "build.classes.dir" location = "${build.dir}/classes"/>
   <property name = "doc.dir"           location = "doc"/>
 
   <property name = "build.debug"       value = "true"/>
 
+
+  <!-- .java source files -->
   <fileset id = "src.common" dir = "${src.dir}">
     <include name = "wizard/common/**/*.java"/>
   </fileset>
@@ -22,25 +23,39 @@
   </fileset>
 
 
-  <target name = "compile">
+  <!-- .class compiled files -->
+  <fileset id = "build.common.classes" dir = "${build.classes.dir}">
+    <include name = "wizard/common/**/*.class"/>
+  </fileset>
+
+  <fileset id = "build.client.classes" dir = "${build.classes.dir}">
+    <include name = "wizard/client/**/*.class"/>
+  </fileset>
+
+  <fileset id = "build.server.classes" dir = "${build.classes.dir}">
+    <include name = "wizard/server/**/*.class"/>
+  </fileset>
+
+
+  <target name = "compile" description = "Compile all source files">
     <mkdir dir = "${build.classes.dir}"/>
     <javac includeantruntime = "false" srcdir = "${src.dir}" destdir = "${build.classes.dir}" debug = "${build.debug}"/>
   </target>
 
 
-  <target name = "dist" depends = "compile">
+  <target name = "dist" depends = "compile" description = "Create jar files">
 
     <jar destfile = "${build.dir}/server.jar">
-      <fileset refid = "src.common"/>
-      <fileset refid = "src.server"/>
+      <fileset refid = "build.common.classes"/>
+      <fileset refid = "build.server.classes"/>
       <manifest>
         <attribute name = "Main-Class" value = "wizard.server.Main"/>
       </manifest>
     </jar>
 
     <jar destfile = "${build.dir}/client.jar">
-      <fileset refid = "src.common"/>
-      <fileset refid = "src.client"/>
+      <fileset refid = "build.common.classes"/>
+      <fileset refid = "build.client.classes"/>
       <manifest>
         <attribute name = "Main-Class" value = "wizard.client.Main"/>
       </manifest>
@@ -49,7 +64,7 @@
   </target>
 
 
-  <target name = "doc">
+  <target name = "doc" description = "Generate javadoc">
     <mkdir dir = "${doc.dir}"/>
 
     <javadoc destdir = "${doc.dir}" packagenames = "*" private = "true" windowtitle = "Wizard Documentation">
@@ -58,10 +73,9 @@
   </target>
 
 
-  <target name = "clean">
+  <target name = "clean" description = "Clean up project folder">
     <delete dir="${doc.dir}"/>
     <delete dir="${build.classes.dir}"/>
-    <delete dir="${build.dist.dir}"/>
     <delete dir="${build.dir}"/>
   </target>
 </project>
