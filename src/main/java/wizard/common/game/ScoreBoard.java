@@ -9,8 +9,6 @@ import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
-import wizard.server.Player;
-
 public class ScoreBoard implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -185,29 +183,10 @@ public class ScoreBoard implements Serializable {
      *
      * @param player The player to add
      */
-    public void add(final Player player) {
-        add(player.getName());
-    }
-
-    /**
-     * Adds a given player.
-     *
-     * @param player The player to add
-     */
     public void add(final String player) {
         if (!map.containsKey(player)) {
             map.put(player, new Triple());
         }
-    }
-
-    /**
-     * Sets the current prediction of a given player.
-     *
-     * @param player The player to set the current prediction of
-     * @param prediction The prediction to set
-     */
-    public void setPredictions(final Player player, int prediction) {
-        setPredictions(player.getName(), prediction);
     }
 
     /**
@@ -230,32 +209,12 @@ public class ScoreBoard implements Serializable {
      * @param player The player to set the current number of tricks of
      * @param tricks The number of tricks to set
      */
-    public void setTricks(final Player player, int tricks) {
-        setTricks(player.getName(), tricks);
-    }
-
-    /**
-     * Sets the current number of taken tricks of a given player.
-     *
-     * @param player The player to set the current number of tricks of
-     * @param tricks The number of tricks to set
-     */
     public void setTricks(final String player, int tricks) {
         Triple triple = map.get(player);
         if (triple == null) {
             add(player);
         }
         triple.tricks = tricks;
-    }
-
-    /**
-     * Sets the current score of a given player.
-     *
-     * @param player The player to set the current score of
-     * @param score The score to set
-     */
-    public void setScore(final Player player, int score) {
-        setScore(player.getName(), score);
     }
 
     /**
@@ -277,28 +236,9 @@ public class ScoreBoard implements Serializable {
      *
      * @param player The player to increase the number of taken tricks of
      */
-    public void addTrick(final Player player) {
-        addTrick(player.getName());
-    }
-
-    /**
-     * Increases the current number of taken tricks of a given player by one.
-     *
-     * @param player The player to increase the number of taken tricks of
-     */
     public void addTrick(final String player) {
         int tricks = getTricks(player);
         setTricks(player, tricks + 1);
-    }
-
-    /**
-     * Increases the current score of a given player by a given amount.
-     *
-     * @param player The player of which to increase the score
-     * @param score The amount of how much to increase the score
-     */
-    public void addScore(final Player player, int score) {
-        addScore(player.getName(), score);
     }
 
     /**
@@ -318,16 +258,6 @@ public class ScoreBoard implements Serializable {
      * @param player The player to return the current prediction of
      * @return The current prediction of given player
      */
-    public int getPrediction(final Player player) {
-        return getPrediction(player.getName());
-    }
-
-    /**
-     * Returns the current prediction of a given player.
-     *
-     * @param player The player to return the current prediction of
-     * @return The current prediction of given player
-     */
     public int getPrediction(final String player) {
         Triple triple = map.get(player);
         return (triple == null) ? null : triple.prediction;
@@ -339,29 +269,9 @@ public class ScoreBoard implements Serializable {
      * @param player The player to return the current tricks of
      * @return The current number of taken tricks of given player
      */
-    public int getTricks(final Player player) {
-        return getTricks(player.getName());
-    }
-
-    /**
-     * Returns the current number of taken tricks of a given play)er.
-     *
-     * @param player The player to return the current tricks of
-     * @return The current number of taken tricks of given player
-     */
     public int getTricks(final String player) {
         Triple triple = map.get(player);
         return (triple == null) ? null : triple.tricks;
-    }
-
-    /**
-     * Returns the current score of a given player.
-     *
-     * @param player The player to return the current score of
-     * @return The current score of a given player
-     */
-    public int getScore(final Player player) {
-        return getScore(player.getName());
     }
 
     /**

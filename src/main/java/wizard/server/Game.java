@@ -33,7 +33,7 @@ public class Game {
     public Game(List<Player> players) {
         this.players = players;
         this.scoreBoard = new ScoreBoard();
-        players.stream().forEach(scoreBoard::add);
+        players.stream().map(Player::getName).forEach(scoreBoard::add);
     }
 
     /**
@@ -193,10 +193,10 @@ public class Game {
             // All but the last player may predict any amount of tricks.
             if (i == players.size() - 1) {
                 int prediction = currentPlayer().askPrediction(round, round - predictionSum);
-                scoreBoard.setPredictions(currentPlayer(), prediction);
+                scoreBoard.setPredictions(currentPlayer().getName(), prediction);
             } else {
                 int prediction = currentPlayer().askPrediction(round);
-                scoreBoard.setPredictions(currentPlayer(), prediction);
+                scoreBoard.setPredictions(currentPlayer().getName(), prediction);
                 predictionSum += prediction;
             }
 
@@ -260,7 +260,7 @@ public class Game {
         // Player who took the trick gets to start the next trick
         currentPlayer = winnerId;
 
-        scoreBoard.addTrick(winner);
+        scoreBoard.addTrick(winner.getName());
 
         // Update player state
         players.stream()
