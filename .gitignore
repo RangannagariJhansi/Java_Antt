@@ -33,6 +33,8 @@ $RECYCLE.BIN/
 # Generated directories
 build
 doc
+lib
+test-output
 
 # Generated files
 *.jar

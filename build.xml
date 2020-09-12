@@ -1,10 +1,11 @@
 <?xml version = "1.0"?>
-<project name = "Wizard" default = "dist">
+<project name = "Wizard" default = "all" xmlns:ivy="antlib:org.apache.ivy.ant">
   <property name = "src.dir"           location = "src/main/java"/>
   <property name = "test.dir"          location = "src/test/java"/>
   <property name = "build.dir"         location = "build"/>
   <property name = "build.classes.dir" location = "${build.dir}/classes"/>
   <property name = "doc.dir"           location = "doc"/>
+  <property name = "lib.dir"           location = "lib"/>
 
   <property name = "build.debug"       value = "true"/>
 
@@ -37,9 +38,31 @@
   </fileset>
 
 
-  <target name = "compile" description = "Compile all source files">
+  <target name = "all" depends = "dependencies, compile-tests, dist" description = "Download dependencies and build .jar files">
+  </target>
+
+
+  <target name = "dependencies" description = "Download all dependencies">
+    <ivy:retrieve sync = "true" type = "jar"/>
+  </target>
+
+
+  <target name = "classpath">
+    <ivy:cachepath pathid = "classpath"/>
+  </target>
+
+
+  <target name = "compile" depends = "classpath" description = "Compile all application source files">
     <mkdir dir = "${build.classes.dir}"/>
     <javac includeantruntime = "false" srcdir = "${src.dir}" destdir = "${build.classes.dir}" debug = "${build.debug}"/>
+  </target>
+
+
+  <target name = "compile-tests" depends = "classpath, compile" description = "Compile test source files">
+    <mkdir dir = "${build.classes.dir}"/>
+    <javac includeantruntime = "false" srcdir = "${test.dir}" destdir = "${build.classes.dir}" debug = "${build.debug}">
+      <classpath refid = "classpath"/>
+    </javac>
   </target>
 
 
@@ -64,6 +87,19 @@
   </target>
 
 
+  <target name = "test" depends = "classpath">
+    <junitlauncher printSummary = "true">
+      <classpath refid = "classpath"/>
+
+      <testclasses outputdir = "test-output">
+          <fileset dir = "${build.classes.dir}/wizard/tests"/>
+          <listener type = "legacy-brief" sendSysErr = "true" sendSysOut = "true"/>
+          <listener type = "legacy-plain" sendSysErr = "true" sendSysOut = "true"/>
+      </testclasses>
+    </junitlauncher>
+  </target>
+
+
   <target name = "doc" description = "Generate javadoc">
     <mkdir dir = "${doc.dir}"/>
 
@@ -74,9 +110,9 @@
 
 
   <target name = "clean" description = "Clean up project folder">
+    <delete dir="${lib.dir}"/>
     <delete dir="${doc.dir}"/>
     <delete dir="${build.classes.dir}"/>
     <delete dir="${build.dir}"/>
   </target>
 </project>
-
