@@ -99,7 +99,7 @@ jobs:
       #   run: ant clean build
 
       - name: Build with Ant
-        run: ant build
+        run: ant dist
 
       # - name: Download JaCoCo JAR
       #   run: |
