@@ -47,9 +47,9 @@
   </target>
 
 
-<!--   <target name = "classpath">
-    <ivy:cachepath pathid = "classpath"/>
-  </target> -->
+  <target name = "classpath">
+    <ivy:classpath pathid = "classpath"/>
+  </target>
 
 
   <target name = "compile" depends = "classpath" description = "Compile all application source files">
