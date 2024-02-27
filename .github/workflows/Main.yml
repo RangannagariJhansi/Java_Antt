@@ -95,8 +95,8 @@ jobs:
          key: ${{ runner.os }}-ant-${{ hashFiles('**/build.xml') }}
          restore-keys: ${{ runner.os }}-ant-
 
-      - name: Run Ant build
-        run: ant clean build
+      # - name: Run Ant build
+      #   run: ant clean build
 
       - name: Build with Ant
         run: ant build
