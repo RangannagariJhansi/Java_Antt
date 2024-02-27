@@ -1,0 +1,195 @@
+name: Ant Workflow file
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+    tags-ignore:
+      - '**'
+#Run workflow manually for building and releasing on non-main branches such as development or hotfix branches.
+  workflow_dispatch:
+    inputs:
+      buildType:
+        description: Type of build/release
+        required: true
+        type: choice
+        options:
+        - dev
+env:
+  CHILD_SPRING_APPS_PROJECT_NAME : ${{ secrets.CHILD_SPRING_APPS_PROJECT_NAME}}
+  SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY}}
+  
+jobs:
+# CI Build Job
+  build:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions: write-all
+    outputs:
+      UNIT_TEST_RESULTS_XML: ${{ steps.unit_test_file_name.outputs.UNIT_TEST_RESULTS_XML }}
+      COVERAGE_PERCENTAGE: ${{ steps.jacoco_reporter.outputs.coverage_percentage }}
+      BRANCH_RELEASE_TAG: ${{ steps.get_version.outputs.BRANCH_RELEASE_TAG }}
+      BUILD_JOB_STATUS: ${{ steps.set_job_status.outputs.BUILD_JOB_STATUS}}
+
+    steps:
+      # Drafts your next Release notes as Pull Requests are merged into "main"
+      - name: Create draft release
+        id: draft-release
+        if: github.ref == 'refs/heads/main'
+        uses: release-drafter/release-drafter@v5
+    # Check out repo at latest commit
+      - name: Checkout Git Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+      - name: "Get version"
+        shell: sh
+        if: ${{ steps.draft-release.outputs.tag_name != null }}
+        run: |
+          tag=${{ steps.draft-release.outputs.tag_name }}
+          echo TAG=$tag >> $GITHUB_ENV
+          echo VERSION=${tag#v} >> $GITHUB_ENV
+          # create VERSION file with version (will be used by the deploy process)
+          echo ${tag#v} > VERSION
+
+      - name: "Get version"
+        id: get_version
+        if: (github.event.inputs != '')
+        shell: sh
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 | cut -d "-" -f 1)
+          if ${{ github.event.inputs.buildType == 'hotfix' }}
+          then
+            tag="$latest_tag-hotfix"
+          else
+            short_sha=$(git rev-parse --short "${{ github.sha }}")
+            if [ -n "$latest_tag" ]
+            then
+              tag="$latest_tag-dev.$short_sha"
+            else
+              tag="dev.$short_sha"
+            fi
+          fi
+          echo TAG=$tag >> $GITHUB_ENV
+          echo "BRANCH_RELEASE_TAG=$tag" >> $GITHUB_OUTPUT
+          echo VERSION=${tag#v} >> $GITHUB_ENV
+          # create VERSION file with version (will be used by the deploy process)
+          echo ${tag#v} > VERSION
+    # Set up JDK environment
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v3
+        with:
+          distribution: corretto
+          java-version: 11
+
+      - name: Install Ant
+        run: sudo apt-get update && sudo apt-get install ant -y
+
+      - name: Cache Ant dependencies
+        uses: actions/cache@v2
+        with:
+         path: ~/.ant
+         key: ${{ runner.os }}-ant-${{ hashFiles('**/build.xml') }}
+         restore-keys: ${{ runner.os }}-ant-
+
+      - name: Run Ant build
+        run: ant clean build
+
+      - name: Build with Ant
+        run: ant build
+
+      # - name: Download JaCoCo JAR
+      #   run: |
+      #     curl -Lo jacoco.jar https://github.com/jacoco/jacoco/releases/download/v1.3.0/jacoco-cli.jar
+
+
+      # - name: Add JaCoCo JAR to classpath
+      #   run: |
+      #    echo "jacoco.jar:$(pwd)/jacoco-lib/jacoco.jar" >> build.xml  
+      
+    
+      # # Run unit tests
+      # - name: Run Unit Tests
+      #   env:
+      #    ARTIFACTORY_TOKEN: ${{ secrets[env.ARTIFACTORY_TOKEN_SECRET_NAME] }}
+      #    ARTIFACTORY_USER: ${{ env.ARTIFACTORY_USER }}
+      #   shell: sh
+      #   run: ant test
+      
+
+      # # Find code coverage reports for developer review and badge rendering
+      # - name: Get Code Coverage File Path
+      #   shell: sh
+      #   run: |
+      #     echo CODE_COV_RESULTS_ARTIFACT=$(find . -iname "*jacocoTestReport.xml*") >> $GITHUB_ENV
+      #     echo ${{ env.CODE_COV_RESULTS_ARTIFACT }}
+      #     echo ${{ secrets.SONAR_PROJECT_KEY }}
+
+      # # Find unit test results file and rename it
+      # - name: Get Unit Test Results File Path and Rename
+      #   shell: sh
+      #   id: unit_test_file_name
+      #   run: |
+      #     mkdir unit-test-results
+      #     find . -name "unit-test-results" -type d -print
+      #     find . -iname "jacocoTestReport.xml" -type f -print
+      #     echo ${{ env.CODE_COV_RESULTS_ARTIFACT }}
+      #     # find . -iname "*TEST-*.xml*" 
+      #      # echo UNIT_TEST_RESULTS_XML=unit-test-results/*.xml >> $GITHUB_ENV
+      #      # echo "UNIT_TEST_RESULTS_XML=${UNIT_TEST_RESULTS_XML}" >> $GITHUB_OUTPUT
+
+      # # Create unit test results-report for easy developer review within GitHub ecosystem
+      # - name: Create Unit Test Results Report
+      #   id: unit_test_report
+      #   uses: dorny/test-reporter@v1.6.0
+      #   if: success() || failure()
+      #   with:
+      #     name: Unit Test Results
+      #     path: ${{ env.UNIT_TEST_RESULTS_XML }}
+      #     reporter: java-junit
+      #     only-summary: 'false'
+      #     fail-on-error: 'true'   #Set True to enable Quality Gate
+
+      # # Upload unit test results path for developer review and badge rendering
+      # - name: Upload Unit Test Results Artifact for Badges
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: unit-test-results
+      #     path: ${{ env.UNIT_TEST_RESULTS_XML }}
+          
+      - name: Download and Set Up SonarScanner
+        run: |
+          echo 'export SONAR_VERSION="5.0.1.3006-linux"' >> $GITHUB_ENV
+          echo 'export SONAR_CLI="sonar-scanner-cli-${SONAR_VERSION}"' >> $GITHUB_ENV
+          echo 'export SONAR_FOLDER="sonar-scanner-${SONAR_VERSION}"' >> $GITHUB_ENV
+          source $GITHUB_ENV
+          curl "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/${SONAR_CLI}.zip" -o "${SONAR_CLI}.zip"
+          unzip "${SONAR_CLI}.zip"
+          pwd
+          rm -rf sonar-scanner-5.0.1.3006-linux/conf/sonar-scanner.properties
+          cp $GITHUB_WORKSPACE/sonar-scanner.properties sonar-scanner-5.0.1.3006-linux/conf/sonar-scanner.properties 
+          chmod u+x "${SONAR_FOLDER}/bin/sonar-scanner"
+          echo "PATH=\"${PATH}:${PWD}/${SONAR_FOLDER}/bin\"" >> $GITHUB_ENV
+          source $GITHUB_ENV
+          /home/runner/work/Java_Ant/Java_Ant/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.exclusions=**.java -Dsonar.export.results=sonar-results.xml -X
+          ls -lrt
+      
+      - name: listing
+        run: ls -laRt
+        
+      - name: zip for GitHub releases
+        shell: pwsh
+        run: |
+         Compress-Archive -Path  build\libs\*  -Destination ${{ github.event.repository.name }}.zip
+         ls
+      - name: Create Release and Upload Artifacts
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ${{ github.event.repository.name }}.zip
+          tag: "${{ github.run_number }}"
+          name: "${{ github.run_number }}"
+          allowUpdates: true
+          replacesArtifacts: false
