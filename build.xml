@@ -85,6 +85,13 @@
     </jar>
 
   </target>
+ 
+  <ivy-module version="2.0">
+    <info organisation = "org.apache" module = "wizard"/>
+    <dependencies>
+        <dependency org = "org.junit.jupiter" name = "junit-jupiter-api" rev="5.6.2"/>
+    </dependencies>
+</ivy-module>
 
 
   <target name = "test" depends = "classpath">
@@ -115,11 +122,6 @@
     <delete dir="${build.classes.dir}"/>
     <delete dir="${build.dir}"/>
   </target>
-  <ivy-module version="2.0">
-    <info organisation = "org.apache" module = "wizard"/>
-    <dependencies>
-        <dependency org = "org.junit.jupiter" name = "junit-jupiter-api" rev="5.6.2"/>
-    </dependencies>
-</ivy-module>
+  
   
 </project>
