@@ -48,8 +48,15 @@
 
 
   <target name = "classpath">
-    <ivy:classpath pathid = "classpath"/>
+    <ivy:cachepath pathid = "classpath"/>
   </target>
+
+  <taskdef name="ivy" uri="antlib:org.apache.ivy.ant">
+  <classpath>
+    <pathelement location="${ivy.jar.location}"/>
+  </classpath>
+</taskdef>
+
 
 
   <target name = "compile" depends = "classpath" description = "Compile all application source files">
